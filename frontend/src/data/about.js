@@ -40,16 +40,16 @@ export const teams = [
   {
     icon: 'code',
     title: 'Web and digital team',
-    text: 'Designers and developers who build websites, web applications and client portals.',
+    text: 'Designers who create websites, mobile app designs and user interfaces.',
   },
   {
     icon: 'megaphone',
     title: 'Marketing and advertising team',
-    text: 'Specialists in search, social, email, print and outdoor campaigns.',
+    text: 'Specialists in content creation, social media, logos, flyers and brochures.',
   },
   {
     icon: 'layers',
-    title: 'Business support team',
-    text: 'Coordinators who handle administration, correspondence, research and project support.',
+    title: 'Documentation support team',
+    text: 'Advisers who help clients prepare passport applications and travel documents.',
   },
 ];

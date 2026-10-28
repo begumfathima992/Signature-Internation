@@ -1,16 +1,17 @@
 import { Link, useParams } from 'react-router-dom';
 import CtaBand from '../components/CtaBand.jsx';
 import Faq from '../components/Faq.jsx';
-import Icon from '../components/Icon.jsx';
+import { IconBox } from '../components/Icon.jsx';
 import PageHeader from '../components/PageHeader.jsx';
+import PageMeta from '../components/PageMeta.jsx';
 import Photo from '../components/Photo.jsx';
 import ProcessSteps from '../components/ProcessSteps.jsx';
 import Reveal from '../components/Reveal.jsx';
 import SectionHeading from '../components/SectionHeading.jsx';
 import ServiceCard from '../components/ServiceCard.jsx';
+import SubServiceCard from '../components/SubServiceCard.jsx';
 import { images } from '../data/images.js';
 import { getServiceBySlug } from '../data/services.js';
-import usePageMeta from '../hooks/usePageMeta.js';
 import NotFoundPage from './NotFoundPage.jsx';
 
 export default function ServiceDetailPage() {
@@ -21,20 +22,24 @@ export default function ServiceDetailPage() {
 }
 
 function ServiceDetail({ service }) {
-  usePageMeta({ title: service.title, description: `${service.summary} ${service.overview[0]}` });
   const contactLink = `/contact?service=${service.slug}`;
 
   return (
     <>
+      <PageMeta title={service.title} description={`${service.summary} ${service.overview[0]}`} />
       <PageHeader
-        breadcrumb={[{ label: 'Services', to: '/' }, { label: service.title }]}
+        breadcrumb={[
+          { label: 'Home', to: '/' },
+          { label: 'Services', to: '/#services' },
+          { label: service.title, to: `/services/${service.slug}` },
+        ]}
         label="Service"
         title={service.title}
         intro={service.summary}
         actions={
           <>
             <Link to={contactLink} className="button button--primary">
-              Contact us about this service
+              Contact us
             </Link>
             <Link to="/" className="button button--secondary">
               All services
@@ -49,15 +54,54 @@ function ServiceDetail({ service }) {
         </div>
       </div>
 
-      <section className="section" aria-labelledby="overview-title">
-        <div className="container split">
-          <div>
-            <SectionHeading id="overview-title" eyebrow="Overview" title="What we do" />
+      <section className="section section--tight" aria-labelledby="overview-title">
+        <div className="container">
+          <h2 id="overview-title" className="visually-hidden">
+            Overview
+          </h2>
+          <div className="prose-columns">
             {service.overview.map((paragraph) => (
               <p key={paragraph} className="prose">
                 {paragraph}
               </p>
             ))}
+          </div>
+        </div>
+      </section>
+
+      <section className="section section--alt" aria-labelledby="sub-services-title">
+        <div className="container">
+          <SectionHeading
+            id="sub-services-title"
+            eyebrow="What we offer"
+            title="Choose a service to learn more"
+            intro={`${service.subServices.length} specialist ${service.subServices.length === 1 ? 'service' : 'services'} within ${service.title}.`}
+          />
+          <ul className="card-grid">
+            {service.subServices.map((sub, index) => (
+              <Reveal as="li" key={sub.slug} delay={(index % 3) * 60} className="card-grid__item">
+                <SubServiceCard service={service} sub={sub} />
+              </Reveal>
+            ))}
+          </ul>
+        </div>
+      </section>
+
+      <section className="section" aria-labelledby="why-title">
+        <div className="container split">
+          <div>
+            <SectionHeading id="why-title" eyebrow="Why choose us" title="Why choose us for this service" />
+            <ul className="point-list point-list--spaced">
+              {service.whyChooseUs.map((item) => (
+                <li key={item.title}>
+                  <IconBox name={item.icon} />
+                  <div>
+                    <h3>{item.title}</h3>
+                    <p>{item.text}</p>
+                  </div>
+                </li>
+              ))}
+            </ul>
           </div>
           <Reveal className="photo-frame">
             <Photo image={images[service.detailImage]} />
@@ -65,40 +109,10 @@ function ServiceDetail({ service }) {
         </div>
       </section>
 
-      <section className="section section--alt" aria-labelledby="included-title">
-        <div className="container">
-          <SectionHeading id="included-title" eyebrow="What’s included" title="Everything covered in this service" />
-          <ul className="checklist">
-            {service.included.map((item, index) => (
-              <Reveal as="li" key={item} delay={(index % 2) * 60}>
-                <span className="checklist__icon">
-                  <Icon name="check" size={18} />
-                </span>
-                {item}
-              </Reveal>
-            ))}
-          </ul>
-        </div>
-      </section>
-
-      <section className="section" aria-labelledby="how-title">
+      <section className="section section--alt" aria-labelledby="how-title">
         <div className="container">
           <SectionHeading id="how-title" eyebrow="How we work" title="A clear, four-step approach" />
           <ProcessSteps steps={service.process} />
-        </div>
-      </section>
-
-      <section className="section section--alt" aria-labelledby="audience-title">
-        <div className="container">
-          <SectionHeading id="audience-title" eyebrow="Who this is for" title="Is this service right for you?" />
-          <ul className="audience-grid">
-            {service.audience.map((item, index) => (
-              <Reveal as="li" key={item} delay={index * 60} className="audience-grid__item">
-                <Icon name="users" size={20} />
-                <span>{item}</span>
-              </Reveal>
-            ))}
-          </ul>
         </div>
       </section>
 
@@ -114,7 +128,9 @@ function ServiceDetail({ service }) {
           <SectionHeading id="related-title" eyebrow="Related services" title="Often combined with" />
           <div className="card-grid card-grid--two">
             {service.related.map((relatedSlug) => (
-              <ServiceCard key={relatedSlug} service={getServiceBySlug(relatedSlug)} />
+              <div key={relatedSlug} className="card-grid__item">
+                <ServiceCard service={getServiceBySlug(relatedSlug)} />
+              </div>
             ))}
           </div>
         </div>

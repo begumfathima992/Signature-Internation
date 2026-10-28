@@ -5,19 +5,17 @@ import PageHeader from '../components/PageHeader.jsx';
 import Photo from '../components/Photo.jsx';
 import Reveal from '../components/Reveal.jsx';
 import SectionHeading from '../components/SectionHeading.jsx';
+import PageMeta from '../components/PageMeta.jsx';
 import { approach, mission, teams, values, whoWeAre } from '../data/about.js';
 import { images } from '../data/images.js';
-import usePageMeta from '../hooks/usePageMeta.js';
 
 export default function AboutPage() {
-  usePageMeta({
-    title: 'About us',
-    description:
-      'Learn about Signature International Services Limited: who we are, our mission and values, how we work and the specialist teams behind our services.',
-  });
-
   return (
     <>
+      <PageMeta
+        title="About us"
+        description="Learn about Signature International Services Limited: who we are, our mission and values, how we work and the specialist teams behind our services."
+      />
       <PageHeader
         label="About us"
         title="Business support built on clarity and trust"

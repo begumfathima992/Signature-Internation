@@ -36,27 +36,29 @@ All are read at build time, so redeploy after changing them.
 Sends `POST ${VITE_API_URL}/api/contact` with:
 
 ```json
-{ "name": "", "email": "", "phone": "", "service": "", "message": "", "consent": true }
+{ "name": "", "email": "", "phone": "", "service": "", "message": "", "consent": true, "topic": "" }
 ```
 
 Expects `{ "success": true }` or `{ "success": false, "message": "..." }`. Requests time out after 10 seconds and the
 visitor can retry. A hidden honeypot field is checked in the browser only, so the backend should add its own spam
-protection. Links such as `/contact?service=web-development` preselect the service.
+protection. Links such as `/contact?service=web-development` preselect the service, and
+`&topic=website-design` adds that sub-service as a “Topic” line. `topic` (the sub-service name) is only sent when
+the visitor arrived from a sub-service page and kept that service selected.
 
 ## Editing content
 
 All editable text is in `src/data/`:
 
-| File            | Contents                                                                  |
-| --------------- | ------------------------------------------------------------------------- |
-| `company.js`    | Name, tagline, email, phone, WhatsApp, address, hours, map settings       |
-| `services.js`   | The five services: summary, overview, inclusions, process, audience, FAQs |
-| `faqs.js`       | FAQs on the Services page                                                 |
-| `process.js`    | The four-step process                                                     |
-| `highlights.js` | “Why clients choose us” points on the Services page                       |
-| `about.js`      | About page: who we are, mission, values, approach, teams                  |
-| `legal.js`      | Privacy Policy and Terms of Use text (needs legal review before launch)   |
-| `images.js`     | Photo files and alt text                                                  |
+| File            | Contents                                                                     |
+| --------------- | ---------------------------------------------------------------------------- |
+| `company.js`    | Name, tagline, email, phone, WhatsApp, address, hours, map settings          |
+| `services.js`   | The five services and their sub-services (each sub-service has its own page) |
+| `faqs.js`       | FAQs on the Services page                                                    |
+| `process.js`    | The four-step process                                                        |
+| `highlights.js` | “Why clients choose us” points on the Services page                          |
+| `about.js`      | About page: who we are, mission, values, approach, teams                     |
+| `legal.js`      | Privacy Policy and Terms of Use text (needs legal review before launch)      |
+| `images.js`     | Photo files and alt text                                                     |
 
 Design tokens (colours, type, spacing, shadows) are in `src/styles/theme.css`.
 Photos are in `src/assets/images/` (credits in `IMAGE_CREDITS.md`). The logo is `src/assets/logo.webp`. The favicon and touch icon

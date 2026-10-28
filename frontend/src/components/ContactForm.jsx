@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from 'react';
 import { useSite } from '../context/site.js';
 import { company } from '../data/company.js';
 import { services } from '../data/services.js';
+import Icon from './Icon.jsx';
 
 const API_URL = import.meta.env.VITE_API_URL;
 const MESSAGE_MAX = 2000;
@@ -54,7 +55,7 @@ async function submitContact(payload) {
   }
 }
 
-export default function ContactForm({ initialService = '' }) {
+export default function ContactForm({ initialService = '', topic }) {
   const { openLegal } = useSite();
   const [values, setValues] = useState({
     name: '',
@@ -68,6 +69,8 @@ export default function ContactForm({ initialService = '' }) {
   const [errors, setErrors] = useState({});
   const [status, setStatus] = useState('idle'); // idle | sending | success | error
   const [serverMessage, setServerMessage] = useState('');
+  // The topic (a sub-service) only applies while the service it belongs to is still selected.
+  const activeTopic = topic && values.service === initialService ? topic : undefined;
   const formRef = useRef(null);
   const successRef = useRef(null);
   const sendingRef = useRef(false);
@@ -94,6 +97,7 @@ export default function ContactForm({ initialService = '' }) {
       service: values.service,
       message: values.message.trim(),
       consent: values.consent,
+      topic: activeTopic, // optional: omitted from the JSON when undefined
     });
     sendingRef.current = false;
     if (result.success) {
@@ -225,11 +229,22 @@ export default function ContactForm({ initialService = '' }) {
           <label htmlFor="message">
             Message <span className="required">*</span>
           </label>
+          {activeTopic && (
+            <p id="message-topic" className="field__topic">
+              <Icon name="fileText" size={16} />
+              <span>
+                Topic: <strong>{activeTopic}</strong>
+              </span>
+            </p>
+          )}
           <textarea
             rows="6"
             maxLength={MESSAGE_MAX}
+            placeholder={activeTopic ? `Tell us what you need help with for ${activeTopic}.` : undefined}
             {...fieldProps('message')}
-            aria-describedby={`message-count${errors.message ? ' message-error' : ''}`}
+            aria-describedby={[activeTopic && 'message-topic', 'message-count', errors.message && 'message-error']
+              .filter(Boolean)
+              .join(' ')}
           />
           <div className="field__meta">
             {fieldError('message') || <span />}

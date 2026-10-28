@@ -9,15 +9,20 @@ export default function PageHeader({ label, title, intro, breadcrumb, actions, a
           {breadcrumb && (
             <nav className="breadcrumb" aria-label="Breadcrumb">
               <ol>
-                {breadcrumb.map((crumb) => (
-                  <li key={crumb.label}>
-                    {crumb.to ? (
-                      <Link to={crumb.to}>{crumb.label}</Link>
-                    ) : (
-                      <span aria-current="page">{crumb.label}</span>
-                    )}
-                  </li>
-                ))}
+                {breadcrumb.map((crumb, index) => {
+                  const current = index === breadcrumb.length - 1 ? 'page' : undefined;
+                  return (
+                    <li key={crumb.label}>
+                      {crumb.to ? (
+                        <Link to={crumb.to} aria-current={current}>
+                          {crumb.label}
+                        </Link>
+                      ) : (
+                        <span aria-current={current}>{crumb.label}</span>
+                      )}
+                    </li>
+                  );
+                })}
               </ol>
             </nav>
           )}

@@ -5,23 +5,21 @@ import ProcessSteps from '../components/ProcessSteps.jsx';
 import Reveal from '../components/Reveal.jsx';
 import SectionHeading from '../components/SectionHeading.jsx';
 import ServiceCard from '../components/ServiceCard.jsx';
+import PageMeta from '../components/PageMeta.jsx';
 import { servicesFaqs } from '../data/faqs.js';
 import { company } from '../data/company.js';
 import { whyChooseUs } from '../data/highlights.js';
 import { process } from '../data/process.js';
 import { services } from '../data/services.js';
-import usePageMeta from '../hooks/usePageMeta.js';
 
 export default function ServicesPage() {
-  usePageMeta({
-    title: 'Services',
-    description:
-      'Management consultancy, web development, digital marketing, business advertisement and general business services from Signature International Services Limited.',
-  });
-
   return (
     <>
-      <section className="section services-intro" aria-labelledby="services-title">
+      <PageMeta
+        title="Services"
+        description="Management consultancy, web development, digital marketing, business advertisement and general business services from Signature International Services Limited."
+      />
+      <section id="services" className="section services-intro" aria-labelledby="services-title">
         <div className="container">
           {/* The cards lead the page; the heading is for screen readers and search engines. */}
           <h1 id="services-title" className="visually-hidden">

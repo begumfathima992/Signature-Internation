@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from 'react';
 import { Link, NavLink, useLocation } from 'react-router-dom';
 import logo from '../assets/logo.webp';
 import { company } from '../data/company.js';
+import { services } from '../data/services.js';
 import Icon from './Icon.jsx';
 
 const links = [
@@ -13,10 +14,13 @@ const FOCUSABLE = 'a[href], button:not([disabled])';
 
 export default function Navbar() {
   const [open, setOpen] = useState(false);
+  const [servicesOpen, setServicesOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const { pathname } = useLocation();
   const panelRef = useRef(null);
   const toggleRef = useRef(null);
+  const dropdownRef = useRef(null);
+  const dropdownToggleRef = useRef(null);
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 8);
@@ -27,7 +31,28 @@ export default function Navbar() {
 
   useEffect(() => {
     setOpen(false);
+    setServicesOpen(false);
   }, [pathname]);
+
+  // Services dropdown: close on Escape (returning focus to its button) or a click outside.
+  useEffect(() => {
+    if (!servicesOpen) return undefined;
+    function onKeyDown(event) {
+      if (event.key === 'Escape') {
+        setServicesOpen(false);
+        dropdownToggleRef.current?.focus();
+      }
+    }
+    function onPointerDown(event) {
+      if (!dropdownRef.current?.contains(event.target)) setServicesOpen(false);
+    }
+    document.addEventListener('keydown', onKeyDown);
+    document.addEventListener('pointerdown', onPointerDown);
+    return () => {
+      document.removeEventListener('keydown', onKeyDown);
+      document.removeEventListener('pointerdown', onPointerDown);
+    };
+  }, [servicesOpen]);
 
   // While the mobile menu is open: lock page scroll, trap focus, close on Escape.
   useEffect(() => {
@@ -66,19 +91,16 @@ export default function Navbar() {
   // Services stays active on its detail pages.
   const isActive = (to) => (to === '/' ? pathname === '/' || pathname.startsWith('/services/') : pathname === to);
 
-  const navLinks = (className) =>
-    links.map((link) => (
-      <li key={link.to}>
-        <NavLink
-          to={link.to}
-          className={() => `${className}${isActive(link.to) ? ' is-active' : ''}`}
-          aria-current={isActive(link.to) ? 'page' : undefined}
-        >
-          {link.icon && <Icon name={link.icon} size={18} />}
-          {link.label}
-        </NavLink>
-      </li>
-    ));
+  const navLink = (link, className) => (
+    <NavLink
+      to={link.to}
+      className={() => `${className}${isActive(link.to) ? ' is-active' : ''}`}
+      aria-current={isActive(link.to) ? 'page' : undefined}
+    >
+      {link.icon && <Icon name={link.icon} size={18} />}
+      {link.label}
+    </NavLink>
+  );
 
   return (
     <header className={`navbar${scrolled ? ' is-scrolled' : ''}`}>
@@ -90,7 +112,39 @@ export default function Navbar() {
 
         <nav className="navbar__nav" aria-label="Main">
           <ul>
-            {navLinks('nav-link')}
+            <li
+              ref={dropdownRef}
+              className="nav-dropdown"
+              onBlur={(event) => {
+                if (!event.currentTarget.contains(event.relatedTarget)) setServicesOpen(false);
+              }}
+            >
+              {navLink(links[0], 'nav-link')}
+              <button
+                ref={dropdownToggleRef}
+                type="button"
+                className={`nav-dropdown__toggle${servicesOpen ? ' is-open' : ''}`}
+                aria-expanded={servicesOpen}
+                aria-controls="services-menu"
+                aria-label="Show all services"
+                onClick={() => setServicesOpen((current) => !current)}
+              >
+                <Icon name="chevronDown" size={16} />
+              </button>
+              <ul id="services-menu" className="nav-dropdown__menu" hidden={!servicesOpen}>
+                {services.map((service) => (
+                  <li key={service.slug}>
+                    <Link to={`/services/${service.slug}`} className="nav-dropdown__link">
+                      <Icon name={service.icon} size={18} />
+                      {service.title}
+                    </Link>
+                  </li>
+                ))}
+              </ul>
+            </li>
+            {links.slice(1).map((link) => (
+              <li key={link.to}>{navLink(link, 'nav-link')}</li>
+            ))}
             <li>
               <NavLink to="/contact" className="button button--primary button--sm">
                 Contact us
@@ -130,7 +184,23 @@ export default function Navbar() {
             </button>
           </div>
           <nav aria-label="Mobile">
-            <ul className="mobile-menu__links">{navLinks('mobile-link')}</ul>
+            <ul className="mobile-menu__links">
+              <li>
+                {navLink(links[0], 'mobile-link')}
+                <ul className="mobile-menu__sublinks" aria-label="Services">
+                  {services.map((service) => (
+                    <li key={service.slug}>
+                      <NavLink to={`/services/${service.slug}`} className="mobile-sublink">
+                        {service.title}
+                      </NavLink>
+                    </li>
+                  ))}
+                </ul>
+              </li>
+              {links.slice(1).map((link) => (
+                <li key={link.to}>{navLink(link, 'mobile-link')}</li>
+              ))}
+            </ul>
           </nav>
           <Link to="/contact" className="button button--primary button--block">
             Contact us

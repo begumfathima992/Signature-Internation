@@ -3,9 +3,9 @@ import ContactForm from '../components/ContactForm.jsx';
 import Icon from '../components/Icon.jsx';
 import MapCard from '../components/MapCard.jsx';
 import PageHeader from '../components/PageHeader.jsx';
+import PageMeta from '../components/PageMeta.jsx';
 import { company } from '../data/company.js';
-import { getServiceBySlug } from '../data/services.js';
-import usePageMeta from '../hooks/usePageMeta.js';
+import { getServiceBySlug, getSubService } from '../data/services.js';
 
 const nextSteps = [
   'We review your message and reply within one working day.',
@@ -14,15 +14,16 @@ const nextSteps = [
 ];
 
 export default function ContactPage() {
-  usePageMeta({
-    title: 'Contact us',
-    description: `Contact ${company.name} by form, email, phone or WhatsApp. We reply within one working day.`,
-  });
   const [params] = useSearchParams();
-  const preselected = getServiceBySlug(params.get('service'))?.title ?? '';
+  const service = getServiceBySlug(params.get('service'));
+  const topic = getSubService(service, params.get('topic'));
 
   return (
     <>
+      <PageMeta
+        title="Contact us"
+        description={`Contact ${company.name} by form, email, phone or WhatsApp. We reply within one working day.`}
+      />
       <PageHeader
         label="Contact"
         title="Let’s talk about your business"
@@ -32,7 +33,7 @@ export default function ContactPage() {
       <section className="section section--tight section--alt">
         <div className="container contact-layout">
           <div className="card card--form">
-            <ContactForm initialService={preselected} />
+            <ContactForm initialService={service?.title ?? ''} topic={topic?.title} />
           </div>
 
           <div className="contact-aside">
