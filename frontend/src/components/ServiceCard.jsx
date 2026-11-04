@@ -16,13 +16,15 @@ export default function ServiceCard({ service, priority = false, headingLevel = 
         />
       </div>
       <div className="service-card__body">
-        <IconBox name={service.icon} />
-        <Heading className="service-card__title">
-          {/* The stretched link makes the whole card clickable; the sub-service links sit above it. */}
-          <Link to={serviceUrl} className="stretched-link">
-            {service.title}
-          </Link>
-        </Heading>
+        <div className="service-card__header">
+          <IconBox name={service.icon} />
+          <Heading className="service-card__title">
+            {/* The stretched link makes the whole card clickable; the sub-service links sit above it. */}
+            <Link to={serviceUrl} className="stretched-link">
+              {service.title}
+            </Link>
+          </Heading>
+        </div>
         <p className="service-card__summary">{service.summary}</p>
         <ul className="sub-cards" aria-label={`${service.title} include`}>
           {service.subServices.map((sub) => (

@@ -4,7 +4,7 @@ const address = ['1 Sample Street', 'London EC1A 1AA', 'United Kingdom']; // PLA
 
 export const company = {
   name: 'Signature International Services Limited',
-  tagline: 'Consultancy, digital and business support services from one dependable partner.',
+  tagline: 'Consultancy, Digital and Business support services from one dependable partner.',
   description:
     'Signature International Services Limited provides management consultancy, web development, digital marketing, business advertisement and general business services.',
 

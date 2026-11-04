@@ -1,10 +1,16 @@
 import { useSearchParams } from 'react-router-dom';
 import ContactForm from '../components/ContactForm.jsx';
-import Icon from '../components/Icon.jsx';
+import Faq from '../components/Faq.jsx';
+import Icon, { IconBox } from '../components/Icon.jsx';
 import MapCard from '../components/MapCard.jsx';
-import PageHeader from '../components/PageHeader.jsx';
 import PageMeta from '../components/PageMeta.jsx';
+import ProcessSteps from '../components/ProcessSteps.jsx';
+import Reveal from '../components/Reveal.jsx';
+import SectionHeading from '../components/SectionHeading.jsx';
 import { company } from '../data/company.js';
+import { servicesFaqs } from '../data/faqs.js';
+import { whyChooseUs } from '../data/highlights.js';
+import { process } from '../data/process.js';
 import { getServiceBySlug, getSubService } from '../data/services.js';
 
 const nextSteps = [
@@ -22,18 +28,23 @@ export default function ContactPage() {
     <>
       <PageMeta
         title="Contact us"
-        description={`Contact ${company.name} by form, email, phone or WhatsApp. We reply within one working day.`}
+        description={`Request an appointment with ${company.name}, or contact us by email, phone or WhatsApp. We reply within one working day.`}
       />
-      <PageHeader
-        label="Contact"
-        title="Let’s talk about your business"
-        intro="Send us a message about your requirements and we will reply within one working day."
-      />
-
-      <section className="section section--tight section--alt">
+      <section className="section contact-section section--alt">
         <div className="container contact-layout">
-          <div className="card card--form">
-            <ContactForm initialService={service?.title ?? ''} topic={topic?.title} />
+          <div className="contact-main">
+            <div className="card card--form">
+              <ContactForm initialService={service?.title ?? ''} topic={topic?.title} />
+            </div>
+
+            <div className="card">
+              <h2 className="card__title">What happens next?</h2>
+              <ol className="numbered-list">
+                {nextSteps.map((step) => (
+                  <li key={step}>{step}</li>
+                ))}
+              </ol>
+            </div>
           </div>
 
           <div className="contact-aside">
@@ -95,15 +106,6 @@ export default function ContactPage() {
 
             <MapCard />
 
-            <div className="card">
-              <h2 className="card__title">What happens next?</h2>
-              <ol className="numbered-list">
-                {nextSteps.map((step) => (
-                  <li key={step}>{step}</li>
-                ))}
-              </ol>
-            </div>
-
             <div className="quick-contact">
               <a href={`tel:${company.phoneHref}`} className="button button--secondary">
                 <Icon name="phone" size={18} /> Call us
@@ -118,6 +120,47 @@ export default function ContactPage() {
               </a>
             </div>
           </div>
+        </div>
+      </section>
+
+      <section className="section" aria-labelledby="why-title">
+        <div className="container">
+          <SectionHeading id="why-title" eyebrow="Why clients choose us" title="Straightforward to work with" />
+          <ul className="feature-strip">
+            {whyChooseUs.map((item, index) => (
+              <Reveal as="li" key={item.title} delay={index * 80} className="feature-strip__item">
+                <IconBox name={item.icon} />
+                <div>
+                  <h3>{item.title}</h3>
+                  <p>{item.text}</p>
+                </div>
+              </Reveal>
+            ))}
+          </ul>
+        </div>
+      </section>
+
+      <section className="section section--alt" aria-labelledby="process-title">
+        <div className="container">
+          <SectionHeading
+            id="process-title"
+            eyebrow="Our process"
+            title="How every project runs"
+            intro="The same clear four steps, whichever service you choose."
+          />
+          <ProcessSteps steps={process} />
+        </div>
+      </section>
+
+      <section className="section" aria-labelledby="faq-title">
+        <div className="container split split--faq">
+          <SectionHeading
+            id="faq-title"
+            eyebrow="FAQ"
+            title="Common questions"
+            intro="If your question is not answered here, get in touch and we will be happy to help."
+          />
+          <Faq items={servicesFaqs} />
         </div>
       </section>
     </>

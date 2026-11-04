@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
 import { useSite } from '../context/site.js';
 import { company } from '../data/company.js';
+import { countries, DEFAULT_COUNTRY, getCountry } from '../data/countries.js';
 import { services } from '../data/services.js';
 import Icon from './Icon.jsx';
 
@@ -9,21 +10,28 @@ const MESSAGE_MAX = 2000;
 const TIMEOUT_MS = 10000;
 
 const EMAIL_PATTERN = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-const PHONE_PATTERN = /^[+()\d\s-]{7,20}$/;
+const PHONE_PATTERN = /^[+()\d\s-]{6,20}$/;
+const OTHER_SERVICE = 'Other Services';
 
 function validate(values) {
   const errors = {};
   if (!values.name.trim()) errors.name = 'Please enter your full name.';
   if (!values.email.trim()) errors.email = 'Please enter your email address.';
   else if (!EMAIL_PATTERN.test(values.email.trim())) errors.email = 'Please enter a valid email address.';
-  if (values.phone.trim() && !PHONE_PATTERN.test(values.phone.trim())) {
-    errors.phone = 'Please enter a valid phone number, or leave this blank.';
-  }
+  if (!values.phone.trim()) errors.phone = 'Please enter your contact number.';
+  else if (!PHONE_PATTERN.test(values.phone.trim())) errors.phone = 'Please enter a valid contact number.';
   if (!values.service) errors.service = 'Please choose a service.';
   if (!values.message.trim()) errors.message = 'Please tell us a little about your request.';
   else if (values.message.trim().length < 10) errors.message = 'Please write at least 10 characters.';
   if (!values.consent) errors.consent = 'Please confirm you agree to be contacted.';
   return errors;
+}
+
+// The full international number, e.g. "+44 20 7946 0123". A number typed with its own "+" code is kept as it is;
+// otherwise the national trunk 0 is dropped (except for Italy and the Vatican, where it is part of the number).
+function fullPhoneNumber(country, number) {
+  if (number.startsWith('+')) return number;
+  return `${country.dial} ${country.dial === '+39' ? number : number.replace(/^0(?=\d)/, '')}`;
 }
 
 async function submitContact(payload) {
@@ -60,8 +68,9 @@ export default function ContactForm({ initialService = '', topic }) {
   const [values, setValues] = useState({
     name: '',
     email: '',
+    country: DEFAULT_COUNTRY,
     phone: '',
-    service: initialService,
+    service: initialService || OTHER_SERVICE, // a link from a service page preselects that service
     message: '',
     consent: false,
     website: '', // honeypot: hidden from real visitors
@@ -71,6 +80,7 @@ export default function ContactForm({ initialService = '', topic }) {
   const [serverMessage, setServerMessage] = useState('');
   // The topic (a sub-service) only applies while the service it belongs to is still selected.
   const activeTopic = topic && values.service === initialService ? topic : undefined;
+  const country = getCountry(values.country);
   const formRef = useRef(null);
   const successRef = useRef(null);
   const sendingRef = useRef(false);
@@ -93,7 +103,7 @@ export default function ContactForm({ initialService = '', topic }) {
     const result = await submitContact({
       name: values.name.trim(),
       email: values.email.trim(),
-      phone: values.phone.trim(),
+      phone: fullPhoneNumber(country, values.phone.trim()),
       service: values.service,
       message: values.message.trim(),
       consent: values.consent,
@@ -134,10 +144,10 @@ export default function ContactForm({ initialService = '', topic }) {
           <circle cx="26" cy="26" r="24" />
           <path d="M15 27l7 7 15-15" />
         </svg>
-        <h2 ref={successRef} tabIndex="-1">
+        <h1 ref={successRef} tabIndex="-1">
           Thank you{values.name.trim() ? `, ${values.name.trim().split(' ')[0]}` : ''}.
-        </h2>
-        <p>Your message has been sent. A member of our team will reply within one working day.</p>
+        </h1>
+        <p>Your appointment request has been sent. A member of our team will reply within one working day.</p>
       </div>
     );
   }
@@ -163,14 +173,14 @@ export default function ContactForm({ initialService = '', topic }) {
 
   return (
     <form ref={formRef} className="contact-form" onSubmit={handleSubmit} noValidate aria-busy={sending}>
-      <h2>Send us a message</h2>
+      <h1 className="contact-form__title">Appointment Request</h1>
       <p className="form-note">
-        Fields marked <span className="required">*</span> are required.
+        Fields marked with <span className="required">*</span> are required.
       </p>
 
       {status === 'error' && (
         <div className="form-alert" role="alert">
-          <strong>Sorry, your message could not be sent.</strong>
+          <strong>Sorry, your request could not be sent.</strong>
           <p>
             {serverMessage && <>{serverMessage} </>}
             Please try again, or email us at <a href={`mailto:${company.helpEmail}`}>{company.helpEmail}</a>.
@@ -204,9 +214,32 @@ export default function ContactForm({ initialService = '', topic }) {
 
         <div className="field">
           <label htmlFor="phone">
-            Phone <span className="optional">(optional)</span>
+            Contact number <span className="required">*</span>
           </label>
-          <input type="tel" autoComplete="tel" {...fieldProps('phone')} />
+          <div className="phone-input">
+            {/* The native select sits invisibly over a compact flag-and-code label, so it stays fully accessible. */}
+            <div className="phone-input__country">
+              <span className="phone-input__code" aria-hidden="true">
+                <span className="phone-input__flag">{country.flag}</span>
+                {country.dial}
+                <Icon name="chevronDown" size={16} />
+              </span>
+              <select
+                name="country"
+                value={values.country}
+                onChange={handleChange}
+                aria-label={`Country code: ${country.name} ${country.dial}`}
+                autoComplete="tel-country-code"
+              >
+                {countries.map((item) => (
+                  <option key={item.code} value={item.code}>
+                    {item.flag} {item.name} ({item.dial})
+                  </option>
+                ))}
+              </select>
+            </div>
+            <input type="tel" autoComplete="tel-national" inputMode="tel" {...fieldProps('phone')} />
+          </div>
           {fieldError('phone')}
         </div>
 
@@ -221,6 +254,7 @@ export default function ContactForm({ initialService = '', topic }) {
                 {service.title}
               </option>
             ))}
+            <option value={OTHER_SERVICE}>{OTHER_SERVICE}</option>
           </select>
           {fieldError('service')}
         </div>
@@ -285,7 +319,7 @@ export default function ContactForm({ initialService = '', topic }) {
 
       <button type="submit" className="button button--primary button--lg" disabled={sending}>
         {sending && <span className="spinner" aria-hidden="true" />}
-        {sending ? 'Sending…' : 'Send message'}
+        {sending ? 'Sending…' : 'Send request'}
       </button>
     </form>
   );

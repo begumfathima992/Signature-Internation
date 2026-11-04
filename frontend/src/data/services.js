@@ -422,7 +422,7 @@ export const services = [
   },
   {
     slug: 'web-development',
-    icon: 'code',
+    icon: 'globe',
     image: 'webdev',
     detailImage: 'webdevDetail',
     title: 'Web Development Services',

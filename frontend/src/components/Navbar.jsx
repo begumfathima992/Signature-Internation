@@ -15,19 +15,11 @@ const FOCUSABLE = 'a[href], button:not([disabled])';
 export default function Navbar() {
   const [open, setOpen] = useState(false);
   const [servicesOpen, setServicesOpen] = useState(false);
-  const [scrolled, setScrolled] = useState(false);
   const { pathname } = useLocation();
   const panelRef = useRef(null);
   const toggleRef = useRef(null);
   const dropdownRef = useRef(null);
   const dropdownToggleRef = useRef(null);
-
-  useEffect(() => {
-    const onScroll = () => setScrolled(window.scrollY > 8);
-    onScroll();
-    window.addEventListener('scroll', onScroll, { passive: true });
-    return () => window.removeEventListener('scroll', onScroll);
-  }, []);
 
   useEffect(() => {
     setOpen(false);
@@ -103,7 +95,7 @@ export default function Navbar() {
   );
 
   return (
-    <header className={`navbar${scrolled ? ' is-scrolled' : ''}`}>
+    <header className="navbar">
       <div className="container navbar__inner">
         <Link to="/" className="brand" aria-label={`${company.name}, Services home`}>
           <img className="brand__logo" src={logo} alt="" width="192" height="48" />

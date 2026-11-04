@@ -45,6 +45,9 @@ protection. Links such as `/contact?service=web-development` preselect the servi
 `&topic=website-design` adds that sub-service as a “Topic” line. `topic` (the sub-service name) is only sent when
 the visitor arrived from a sub-service page and kept that service selected.
 
+`phone` (the contact number) is required and is sent in international form, such as `+44 20 7946 0123`, built from
+the country code picker and the number typed. `service` is one of the service names or `Other Services`.
+
 ## Editing content
 
 All editable text is in `src/data/`:

@@ -307,31 +307,22 @@ address {
   height: 56px;
 }
 
-/* Navbar */
+/* Navbar: a fixed, compact bar that does not change size on scroll. */
 .navbar {
   position: sticky;
   top: 0;
   z-index: var(--z-nav);
   background: rgba(255, 255, 255, 0.96);
   border-bottom: 1px solid var(--color-border);
-  transition: box-shadow var(--duration) ease;
-}
-
-.navbar.is-scrolled {
-  box-shadow: var(--shadow-md);
+  box-shadow: var(--shadow-sm);
 }
 
 .navbar__inner {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: var(--space-2);
+  gap: var(--space-3);
   height: var(--nav-height);
-  transition: height var(--duration) var(--ease);
-}
-
-.navbar.is-scrolled .navbar__inner {
-  height: var(--nav-height-compact);
 }
 
 .brand {
@@ -353,17 +344,20 @@ address {
 .brand__logo {
   flex-shrink: 0;
   width: auto;
-  height: 48px;
-  transition: transform var(--duration) var(--ease);
-  transform-origin: left center;
+  height: 40px;
 }
 
-.brand__name {
-  max-width: 230px;
+/* In the navbar the full company name sits on one line, centred between the logo and the links. */
+.navbar .brand {
+  flex: 1;
+  min-width: 0;
 }
 
-.navbar.is-scrolled .brand__logo {
-  transform: scale(0.85);
+.navbar .brand__name {
+  flex: 1;
+  text-align: center;
+  white-space: nowrap;
+  font-size: clamp(1rem, 1.6vw, 1.125rem);
 }
 
 .navbar__nav ul {
@@ -653,14 +647,33 @@ address {
   }
 }
 
-/* On small screens the logo (which already shows the name) stands alone. */
+/* On phones the name gets its own centred row under the logo and menu button. */
 @media (max-width: 639px) {
-  .navbar .brand__name {
-    display: none;
+  .navbar__inner {
+    position: relative;
+    height: auto;
+    padding-block: var(--space-1);
+  }
+
+  .navbar .brand {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 4px;
   }
 
   .navbar .brand__logo {
+    align-self: flex-start;
     height: 40px;
+  }
+
+  .navbar .brand__name {
+    font-size: clamp(0.8125rem, 4.4vw, 1.0625rem);
+  }
+
+  .navbar__toggle {
+    position: absolute;
+    top: var(--space-1);
+    right: var(--gutter);
   }
 }
 
@@ -934,6 +947,36 @@ address {
   padding: 0 var(--space-3) var(--space-3);
 }
 
+/* Card icon: on hover it fills with the accent colour and the symbol spins round with a slight bounce. */
+.service-card__body .icon-box {
+  transition:
+    background-color var(--duration) ease,
+    color var(--duration) ease,
+    box-shadow var(--duration) ease;
+}
+
+.service-card__body .icon-box svg {
+  transition: transform 700ms cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.service-card:hover .service-card__body .icon-box,
+.service-card:has(.stretched-link:focus-visible) .service-card__body .icon-box {
+  background: var(--color-accent);
+  color: var(--color-bg);
+  box-shadow: 0 6px 16px -6px var(--color-accent);
+}
+
+.service-card:hover .service-card__body .icon-box svg,
+.service-card:has(.stretched-link:focus-visible) .service-card__body .icon-box svg {
+  transform: rotate(360deg) scale(1.12);
+}
+
+.service-card__header {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
 .service-card__body .icon-box {
   position: relative;
   margin-top: calc(var(--space-3) * -1);
@@ -1042,6 +1085,159 @@ address {
 @media (max-width: 299px) {
   .sub-cards {
     grid-template-columns: 1fr;
+  }
+}
+
+/* Services page: compact cards. On wide screens the first card spans two rows and the grid
+   fills the screen below the navbar, with the photos taking whatever height is left. */
+.services-intro {
+  padding-bottom: var(--space-4);
+}
+
+.services-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: var(--space-2);
+}
+
+.services-grid__item {
+  display: flex;
+}
+
+.services-grid__item:first-child {
+  grid-column: 1 / -1;
+}
+
+.services-grid .service-card__media img {
+  aspect-ratio: 2 / 1;
+}
+
+.services-grid__item:first-child .service-card__media img {
+  aspect-ratio: 3 / 1;
+}
+
+.services-grid .service-card__body {
+  padding: var(--space-2) 20px 20px;
+}
+
+.services-grid .service-card__header {
+  flex-direction: row;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: var(--space-1);
+}
+
+.services-grid .service-card__body .icon-box {
+  width: 40px;
+  height: 40px;
+  margin: 0;
+  border: 0;
+}
+
+.services-grid .service-card__title {
+  margin: 0;
+  font-size: var(--text-lg);
+  line-height: 1.3;
+}
+
+.services-grid .service-card__summary {
+  margin-bottom: 12px;
+  font-size: var(--text-sm);
+  line-height: 1.5;
+}
+
+.services-grid .sub-cards {
+  gap: 6px;
+  margin-bottom: 12px;
+}
+
+.services-grid .sub-card {
+  min-height: 40px;
+  padding: 6px var(--space-1);
+}
+
+.services-grid .sub-card__icon {
+  width: 24px;
+  height: 24px;
+}
+
+.services-grid .service-card__more {
+  font-size: var(--text-sm);
+}
+
+.services-grid .service-card:hover {
+  transform: translateY(-3px);
+}
+
+@media (min-width: 1024px) {
+  .services-grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    grid-template-rows: repeat(2, 1fr);
+    min-height: calc(100svh - var(--nav-height) - var(--space-4) * 2);
+  }
+
+  .services-grid__item:first-child {
+    grid-column: auto;
+    grid-row: span 2;
+  }
+
+  .services-grid .service-card__media {
+    flex: 1 1 0;
+    min-height: 72px;
+  }
+
+  .services-grid .service-card__media img,
+  .services-grid__item:first-child .service-card__media img {
+    height: 100%;
+    aspect-ratio: auto;
+  }
+
+  .services-grid .service-card__body {
+    flex: 0 0 auto;
+  }
+
+  /* The summary is left to screen readers here (each service page shows it in full) so both rows fit. */
+  .services-grid .service-card__summary {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip-path: inset(50%);
+    white-space: nowrap;
+  }
+
+  .services-grid .service-card__header {
+    margin-bottom: 12px;
+  }
+
+  .services-intro {
+    padding-block: var(--space-3);
+  }
+
+  .services-grid {
+    --services-row: calc((100svh - var(--nav-height) - var(--space-3) * 2 - var(--space-2)) / 2);
+    min-height: calc(100svh - var(--nav-height) - var(--space-3) * 2);
+  }
+
+  /* The four smaller cards share one photo height (a row minus the tallest card body), so photos and
+     "Learn more" line up across each row; the first card's photo fills its remaining height. */
+  .services-grid__item:not(:first-child) .service-card__media {
+    flex: none;
+    height: clamp(72px, var(--services-row) - 260px, 320px);
+  }
+
+  .services-grid__item:not(:first-child) .service-card__body {
+    flex: 1 0 auto;
+  }
+}
+
+@media (max-width: 639px) {
+  .services-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .services-grid__item:first-child .service-card__media img {
+    aspect-ratio: 2 / 1;
   }
 }
 
@@ -1486,6 +1682,11 @@ address {
   align-items: start;
 }
 
+.contact-section {
+  padding-top: var(--space-4);
+}
+
+.contact-main,
 .contact-aside {
   display: grid;
   gap: var(--space-3);
@@ -1666,7 +1867,7 @@ address {
 }
 
 /* Form */
-.contact-form h2 {
+.contact-form__title {
   font-size: var(--text-2xl);
 }
 
@@ -1727,6 +1928,61 @@ address {
 
 .field textarea {
   resize: vertical;
+}
+
+/* Contact number: country code picker joined to the number input. */
+.phone-input {
+  display: flex;
+}
+
+.phone-input__country {
+  position: relative;
+  flex-shrink: 0;
+}
+
+.phone-input__code {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  height: 100%;
+  min-height: 48px;
+  padding: 0 12px;
+  border: 1px solid var(--color-border-strong);
+  border-right: 0;
+  border-radius: var(--radius-sm) 0 0 var(--radius-sm);
+  background: var(--color-surface);
+  color: var(--color-text);
+  white-space: nowrap;
+}
+
+.phone-input__flag {
+  font-size: 1.25em;
+  line-height: 1;
+}
+
+.phone-input__code svg {
+  color: var(--color-text-muted);
+}
+
+.field .phone-input__country select {
+  position: absolute;
+  inset: 0;
+  min-height: 0;
+  padding: 0;
+  opacity: 0;
+  cursor: pointer;
+}
+
+.phone-input__country:has(select:focus-visible) .phone-input__code {
+  border-color: var(--color-accent);
+  box-shadow: var(--focus-ring);
+  position: relative;
+  z-index: 1;
+}
+
+.field .phone-input input {
+  min-width: 0;
+  border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
 }
 
 .field select {
@@ -1844,11 +2100,11 @@ address {
   animation: float-in var(--duration-slow) var(--ease);
 }
 
-.form-success h2 {
+.form-success h1 {
   font-size: var(--text-2xl);
 }
 
-.form-success h2:focus {
+.form-success h1:focus {
   outline: none;
 }
 
@@ -2267,6 +2523,10 @@ address {
   }
 
   .service-card:hover .service-card__media img {
+    transform: none;
+  }
+
+  .service-card:hover .service-card__body .icon-box svg {
     transform: none;
   }
 }
