@@ -3,27 +3,22 @@ import { images } from '../data/images.js';
 import Icon, { IconBox } from './Icon.jsx';
 import Photo from './Photo.jsx';
 
-export default function ServiceCard({ service, priority = false, headingLevel = 3 }) {
-  const Heading = `h${headingLevel}`;
+export default function ServiceCard({ service }) {
   const serviceUrl = `/services/${service.slug}`;
   return (
     <article className="service-card">
       <div className="service-card__media">
-        <Photo
-          image={images[service.image]}
-          sizes="(min-width: 1024px) 380px, (min-width: 640px) 50vw, 100vw"
-          priority={priority}
-        />
+        <Photo image={images[service.image]} sizes="(min-width: 1024px) 380px, (min-width: 640px) 50vw, 100vw" />
       </div>
       <div className="service-card__body">
         <div className="service-card__header">
           <IconBox name={service.icon} />
-          <Heading className="service-card__title">
+          <h3 className="service-card__title">
             {/* The stretched link makes the whole card clickable; the sub-service links sit above it. */}
             <Link to={serviceUrl} className="stretched-link">
               {service.title}
             </Link>
-          </Heading>
+          </h3>
         </div>
         <p className="service-card__summary">{service.summary}</p>
         <ul className="sub-cards" aria-label={`${service.title} include`}>
