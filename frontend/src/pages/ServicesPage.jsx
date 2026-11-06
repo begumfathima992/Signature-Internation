@@ -1,11 +1,25 @@
+import { useState, useSyncExternalStore } from 'react';
 import { Link } from 'react-router-dom';
 import Icon from '../components/Icon.jsx';
 import PageMeta from '../components/PageMeta.jsx';
-import Reveal from '../components/Reveal.jsx';
 import { company } from '../data/company.js';
 import { services } from '../data/services.js';
 
+const ACCORDION_QUERY = '(max-width: 575px)';
+
+function subscribeToAccordionQuery(onChange) {
+  const query = window.matchMedia(ACCORDION_QUERY);
+  query.addEventListener('change', onChange);
+  return () => query.removeEventListener('change', onChange);
+}
+
 export default function ServicesPage() {
+  const accordion = useSyncExternalStore(
+    subscribeToAccordionQuery,
+    () => window.matchMedia(ACCORDION_QUERY).matches,
+    () => false,
+  );
+
   return (
     <>
       <PageMeta
@@ -16,71 +30,89 @@ export default function ServicesPage() {
       <h1 className="visually-hidden">Services from {company.name}</h1>
 
       <section id="services" className="services-section" aria-labelledby="services-title">
-        <header className="container services-section__header">
-          <p className="services-section__label">Our services</p>
-          <h2 id="services-title">Everything your business needs, in one place</h2>
-          <p className="services-section__intro">
-            From strategy and branding to websites, marketing and travel documentation, we support you at every stage.
-          </p>
-        </header>
-
-        <div className="service-rows">
-          {services.map((service, index) => (
-            <ServiceRow key={service.slug} service={service} number={index + 1} />
-          ))}
-        </div>
-
-        <div className="container">
-          <Reveal className="services-cta">
+        <div className="services-section__inner">
+          <header className="services-section__header">
             <div>
-              <h3>Not sure which service you need?</h3>
-              <p>Book a free consultation and we&rsquo;ll recommend the right solution for your business.</p>
+              <p className="services-section__label">Our services</p>
+              <h2 id="services-title">Complete business support, under one roof</h2>
             </div>
-            <Link to="/contact" className="button services-cta__button">
+            <p className="services-section__intro">
+              Consultancy, digital, branding and travel documentation services for UK businesses.
+            </p>
+          </header>
+
+          <div className="services-grid">
+            {services.map((service) => (
+              <ServiceColumn key={service.slug} service={service} accordion={accordion} />
+            ))}
+          </div>
+
+          <div className="services-cta">
+            <p>Not sure which service you need? Get free advice from our team.</p>
+            <Link to="/contact" className="button button--sm services-cta__button">
               Book a free consultation
             </Link>
-          </Reveal>
+          </div>
         </div>
       </section>
     </>
   );
 }
 
-function ServiceRow({ service, number }) {
+function ServiceColumn({ service, accordion }) {
+  const [open, setOpen] = useState(false);
   const serviceUrl = `/services/${service.slug}`;
-  return (
-    <article className="service-row">
-      <Reveal className="container service-row__inner">
-        <div>
-          <span className="service-row__icon">
-            <Icon name={service.icon} size={24} />
-          </span>
-          <h3 className="service-row__title">
-            <span className="service-row__number" aria-hidden="true">
-              {String(number).padStart(2, '0')}
-            </span>
-            {service.title}
-          </h3>
-          <p className="service-row__summary">{service.summary}</p>
-          <Link to={serviceUrl} className="text-link">
-            Explore service<span className="visually-hidden">: {service.title}</span>
-            <Icon name="arrowRight" size={18} />
-          </Link>
-        </div>
+  const panelId = `${service.slug}-panel`;
 
-        <ul className="service-row__list" aria-label={`${service.title} include`}>
+  return (
+    <article className="service-column">
+      {accordion ? (
+        <h3 className="service-column__title">
+          <button
+            type="button"
+            className={`service-column__toggle${open ? ' is-open' : ''}`}
+            aria-expanded={open}
+            aria-controls={panelId}
+            onClick={() => setOpen((current) => !current)}
+          >
+            <ServiceIcon name={service.icon} />
+            <span>{service.title}</span>
+            <Icon name="chevronDown" size={20} />
+          </button>
+        </h3>
+      ) : (
+        <>
+          <ServiceIcon name={service.icon} />
+          <h3 className="service-column__title">{service.title}</h3>
+        </>
+      )}
+
+      <div id={panelId} className="service-column__panel" hidden={accordion && !open}>
+        <p className="service-column__summary">{service.columnSummary ?? service.summary}</p>
+        <ul className="service-column__list" aria-label={`${service.title} include`}>
           {service.subServices.map((sub) => (
             <li key={sub.slug}>
-              <Link to={`${serviceUrl}/${sub.slug}`} className="service-row__link">
-                <Icon name="check" size={18} />
+              <Link to={`${serviceUrl}/${sub.slug}`} className="service-column__link">
+                <Icon name="check" size={14} />
                 {/* A non-breaking hyphen keeps "Re-engineering" whole when the name wraps. */}
-                <span className="service-row__name">{sub.title.replace(/-/g, '‑')}</span>
-                <Icon name="arrowRight" size={16} />
+                <span>{sub.title.replace(/-/g, '‑')}</span>
               </Link>
             </li>
           ))}
         </ul>
-      </Reveal>
+        <Link to={serviceUrl} className="text-link service-column__explore">
+          Explore<span className="visually-hidden"> {service.title}</span>
+          <Icon name="arrowRight" size={14} />
+        </Link>
+      </div>
     </article>
+  );
+}
+
+function ServiceIcon({ name }) {
+  return (
+    <span className="service-column__icon">
+      <Icon name={name} size={20} />
+    </span>
   );
 }

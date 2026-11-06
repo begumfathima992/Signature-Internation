@@ -9,6 +9,7 @@ export const services = [
     image: 'consultancy',
     detailImage: 'consultancyDetail',
     title: 'Management Consultancy Services',
+    columnSummary: 'Advice on strategy, operations and sustainable growth.', // shorter text for the Services page grid
     summary: 'Practical advice on strategy, operations and sustainable growth.',
     overview: [
       'We work alongside owners and leadership teams to understand where the business stands today, agree where it needs to be, and set out a realistic plan to close the gap.',
@@ -626,6 +627,7 @@ export const services = [
     image: 'marketing',
     detailImage: 'marketingDetail',
     title: 'Digital Marketing Services',
+    columnSummary: 'Content and social media that keep your brand active.', // shorter text for the Services page grid
     summary: 'Content creation and social media management that keeps your brand active.',
     overview: [
       'We help businesses stay visible online with regular, well-made content and consistently managed social media channels.',
@@ -1016,6 +1018,7 @@ export const services = [
     image: 'general',
     detailImage: 'generalDetail',
     title: 'General Services',
+    columnSummary: 'Passport and travel documents for the US, UK and India.', // shorter text for the Services page grid
     summary: 'Passport and travel documentation support for the US, UK and India.',
     overview: [
       'Applying for a passport or preparing travel documents can be time-consuming and confusing. We help you understand what is needed and prepare your paperwork carefully.',
