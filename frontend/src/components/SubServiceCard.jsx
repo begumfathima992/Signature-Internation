@@ -7,9 +7,11 @@ import Photo from './Photo.jsx';
 export default function SubServiceCard({ service, sub }) {
   return (
     <article className="service-card service-card--sub">
-      <div className="service-card__media">
-        <Photo image={images[sub.image]} sizes="(min-width: 1024px) 380px, (min-width: 640px) 50vw, 100vw" />
-      </div>
+      {sub.image && (
+        <div className="service-card__media">
+          <Photo image={images[sub.image]} sizes="(min-width: 1024px) 380px, (min-width: 640px) 50vw, 100vw" />
+        </div>
+      )}
       <div className="service-card__body">
         <IconBox name={sub.icon} />
         <h3 className="service-card__title">
@@ -17,7 +19,7 @@ export default function SubServiceCard({ service, sub }) {
             {sub.title}
           </Link>
         </h3>
-        <p className="service-card__summary">{sub.shortDescription}</p>
+        {sub.shortDescription && <p className="service-card__summary">{sub.shortDescription}</p>}
         <span className="service-card__more" aria-hidden="true">
           Learn more <Icon name="arrowRight" size={18} />
         </span>

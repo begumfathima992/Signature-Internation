@@ -1,0 +1,129 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Admin {
+  id           String    @id @default(uuid())
+  name         String
+  email        String    @unique
+  passwordHash String
+  role         String    @default("admin")
+  isActive     Boolean   @default(true)
+  lastLoginAt  DateTime?
+  createdAt    DateTime  @default(now())
+  updatedAt    DateTime  @updatedAt
+
+  auditLogs AuditLog[]
+  invitesCreated AdminInvite[] @relation("InviteCreatedBy")
+  resetLinks     AdminInvite[] @relation("ResetForAdmin")
+}
+
+enum InviteType {
+  INVITE // a new admin sets up their account
+  RESET // an existing admin chooses a new password
+}
+
+// One-time links an admin sends to a new admin (INVITE) or to an admin who forgot their password (RESET).
+// Only a SHA-256 hash of the token is stored, so the database cannot be used to rebuild a link.
+model AdminInvite {
+  id          String     @id @default(uuid())
+  type        InviteType
+  name        String
+  email       String
+  tokenHash   String     @unique
+  adminId     String? // for RESET: whose password it resets
+  createdById String
+  expiresAt   DateTime
+  usedAt      DateTime?
+  revokedAt   DateTime?
+  createdAt   DateTime   @default(now())
+
+  admin     Admin? @relation("ResetForAdmin", fields: [adminId], references: [id], onDelete: Restrict)
+  createdBy Admin  @relation("InviteCreatedBy", fields: [createdById], references: [id], onDelete: Restrict)
+
+  @@index([email])
+}
+
+model ServiceCategory {
+  id          String    @id @default(uuid())
+  slug        String    @unique
+  title       String
+  description String
+  icon        String
+  sortOrder   Int
+  isVisible   Boolean   @default(true)
+  // Deleting is a soft delete: isVisible goes false and deletedAt is set, which also takes it out of the admin list.
+  deletedAt   DateTime?
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+
+  items ServiceItem[]
+
+  @@index([sortOrder])
+}
+
+model ServiceItem {
+  id         String    @id @default(uuid())
+  categoryId String
+  slug       String
+  title      String
+  sortOrder  Int
+  isVisible  Boolean   @default(true)
+  deletedAt  DateTime?
+  createdAt  DateTime  @default(now())
+  updatedAt  DateTime  @updatedAt
+
+  category ServiceCategory @relation(fields: [categoryId], references: [id], onDelete: Restrict)
+
+  @@unique([categoryId, slug])
+  @@index([categoryId, sortOrder])
+}
+
+enum AuditAction {
+  CREATE
+  UPDATE
+  DELETE
+  REORDER
+  LOGIN
+  LOGOUT
+  LOGIN_FAILED
+  INVITE
+  REVOKE_INVITE
+  ACCEPT_INVITE
+  RESET_LINK
+  PASSWORD_RESET
+}
+
+enum AuditEntity {
+  ServiceCategory
+  ServiceItem
+  Admin
+}
+
+// Append-only: the API has no way to update or delete these rows.
+// adminId is optional because a failed login may use an email that matches no admin.
+model AuditLog {
+  id         String       @id @default(uuid())
+  adminId    String?
+  adminEmail String
+  action     AuditAction
+  entityType AuditEntity?
+  entityId   String?
+  before     Json?
+  after      Json?
+  ipAddress  String?
+  userAgent  String?
+  createdAt  DateTime     @default(now())
+
+  admin Admin? @relation(fields: [adminId], references: [id], onDelete: Restrict)
+
+  @@index([createdAt])
+  @@index([adminId])
+  @@index([action])
+  @@index([entityType])
+}

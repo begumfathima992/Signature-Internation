@@ -11,7 +11,8 @@ import { company } from '../data/company.js';
 import { servicesFaqs } from '../data/faqs.js';
 import { whyChooseUs } from '../data/highlights.js';
 import { process } from '../data/process.js';
-import { getServiceBySlug, getSubService } from '../data/services.js';
+import { useServices } from '../context/services.js';
+import { getSubService } from '../data/services.js';
 
 const nextSteps = [
   'We review your message and reply within one working day.',
@@ -21,7 +22,8 @@ const nextSteps = [
 
 export default function ContactPage() {
   const [params] = useSearchParams();
-  const service = getServiceBySlug(params.get('service'));
+  const { getService } = useServices();
+  const service = getService(params.get('service'));
   const topic = getSubService(service, params.get('topic'));
 
   return (

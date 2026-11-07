@@ -210,6 +210,18 @@ address {
   background: var(--color-accent-tint);
 }
 
+/* A quiet outlined button that sits beside a primary one without competing with it. */
+.button--ghost {
+  background: transparent;
+  border-color: var(--color-border-strong);
+  color: var(--color-text-muted);
+}
+
+.button--ghost:hover {
+  border-color: var(--color-accent);
+  color: var(--color-accent);
+}
+
 .button--sm {
   min-height: 40px;
   padding: 0 var(--space-2);
@@ -494,7 +506,7 @@ address {
   color: var(--color-accent);
 }
 
-.navbar__nav > ul > li:last-child {
+.navbar__nav .navbar__cta {
   margin-left: var(--space-1);
 }
 
@@ -506,7 +518,7 @@ address {
   display: none;
 }
 
-@media (max-width: 959px) {
+@media (max-width: 1023px) {
   .navbar__nav {
     display: none;
   }
@@ -1520,20 +1532,28 @@ address {
   }
 }
 
-/* Services page: five columns in one bordered grid. From 1366x768 up the whole section,
-   call-to-action strip included, fits on one screen below the navbar. */
+/* Services page: five columns in one bordered grid. From 1366x768 up the whole section
+   fits on one screen below the navbar. */
 .services-section {
   --services-line: #e2e8f0;
   --services-tint: #f8fafc;
   --services-muted: #64748b;
   --services-item: #1e293b;
-  padding-block: var(--space-3);
+  padding-block: var(--space-3) var(--space-4);
+  background: var(--services-tint);
   animation: services-fade-in 200ms ease both;
 }
 
 @keyframes services-fade-in {
   from {
     opacity: 0;
+  }
+}
+
+@keyframes services-rise {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
   }
 }
 
@@ -1553,12 +1573,22 @@ address {
 }
 
 .services-section__label {
+  display: flex;
+  align-items: center;
+  gap: 10px;
   margin: 0 0 var(--space-half);
   color: var(--color-accent);
   font-size: 0.75rem;
   font-weight: 700;
   letter-spacing: 2px;
   text-transform: uppercase;
+}
+
+.services-section__label::before {
+  content: '';
+  width: 24px;
+  height: 2px;
+  background: var(--color-accent);
 }
 
 .services-section__header h2 {
@@ -1582,6 +1612,7 @@ address {
   border: 1px solid var(--services-line);
   border-radius: var(--radius-lg);
   background: var(--color-bg);
+  box-shadow: var(--shadow-sm);
 }
 
 /* Dividers are shadows: the grid clips the ones on its outer edges, whatever the column count. */
@@ -1594,6 +1625,7 @@ address {
   box-shadow:
     1px 0 0 var(--services-line),
     0 1px 0 var(--services-line);
+  animation: services-rise 320ms var(--ease) calc(var(--column-index) * 60ms) both;
 }
 
 .service-column::before {
@@ -1602,14 +1634,31 @@ address {
   inset: 0 0 auto;
   height: 3px;
   background: var(--color-accent);
-  opacity: 0;
-  transition: opacity var(--duration-fast) ease;
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform var(--duration) var(--ease);
 }
 
+/* Hovering a column draws the top bar across, fills the icon tile and spins the icon. */
 @media (hover: hover) {
   .service-column:hover::before {
-    opacity: 1;
+    transform: none;
   }
+
+  .service-column:hover .service-column__icon {
+    background: var(--color-accent);
+    color: var(--color-on-accent);
+    box-shadow: 0 6px 14px -6px var(--color-accent);
+  }
+
+  .service-column:hover .service-column__icon svg {
+    transform: rotate(360deg) scale(1.1);
+  }
+}
+
+.service-column.is-open .service-column__icon {
+  background: var(--color-accent);
+  color: var(--color-on-accent);
 }
 
 .service-column__icon {
@@ -1619,43 +1668,46 @@ address {
   justify-content: center;
   width: 40px;
   height: 40px;
-  margin-bottom: 12px;
   border-radius: 10px;
   background: rgba(31, 58, 95, 0.08);
   color: var(--color-accent);
+  transition:
+    background-color var(--duration) ease,
+    color var(--duration) ease,
+    box-shadow var(--duration) ease;
+}
+
+.service-column__icon svg {
+  transition: transform 700ms cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.service-column__header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 12px;
 }
 
 .service-column__title {
-  min-height: 2.6em;
-  margin: 0 0 var(--space-half);
+  margin: 0;
   color: var(--color-accent);
   font-size: 1.0625rem;
   font-weight: 700;
   line-height: 1.3;
 }
 
-.service-column__panel {
-  display: flex;
-  flex: 1;
-  flex-direction: column;
+.service-column__title a {
+  color: inherit;
+  text-decoration: none;
 }
 
-.service-column__panel[hidden] {
-  display: none;
-}
-
-.service-column__summary {
-  min-height: 2.8em;
-  margin: 0 0 12px;
-  color: var(--services-muted);
-  font-size: var(--text-xs);
-  line-height: 1.4;
+.service-column__title a:hover {
+  text-decoration: underline;
 }
 
 .service-column__list {
   display: grid;
   gap: var(--space-half);
-  margin-bottom: 12px;
   padding-top: 12px;
   border-top: 1px solid var(--services-line);
   list-style: none;
@@ -1663,6 +1715,7 @@ address {
 
 /* 3px of padding above and below plus the 4px list gap makes 10px between names. */
 .service-column__link {
+  position: relative;
   display: flex;
   align-items: flex-start;
   gap: var(--space-1);
@@ -1683,63 +1736,55 @@ address {
   color: var(--color-accent);
 }
 
+/* Hovering a sub-service draws a navy bar down its left edge and slides the name across. */
+.service-column__link::before {
+  content: '';
+  position: absolute;
+  inset: 4px auto 4px 0;
+  width: 2px;
+  border-radius: 2px;
+  background: var(--color-accent);
+  transform: scaleY(0);
+  transition: transform var(--duration) var(--ease);
+}
+
+.service-column__link span {
+  transition: transform var(--duration) var(--ease);
+}
+
+.service-column__link:hover::before,
+.service-column__link:focus-visible::before {
+  transform: none;
+}
+
+.service-column__link:hover span,
+.service-column__link:focus-visible span {
+  transform: translateX(6px);
+}
+
 .service-column__link:focus-visible {
   outline-offset: 0;
 }
 
-.service-column__link svg {
-  flex-shrink: 0;
-  margin-top: 3px;
-  color: var(--color-accent);
+/* Beside the icon the longest titles take three lines, so every header reserves them and the lists start level. */
+@media (min-width: 576px) {
+  .service-column__header {
+    min-height: 66px;
+  }
 }
 
-.service-column__explore {
-  align-self: flex-start;
-  gap: var(--space-half);
-  margin-top: auto;
-  font-size: var(--text-xs);
-}
-
-.services-cta {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  justify-content: space-between;
-  gap: var(--space-1) var(--space-3);
-  margin-top: var(--space-2);
-  padding: var(--space-2) var(--space-3);
-  border-radius: var(--radius);
-  background: var(--color-accent);
-  color: var(--color-on-accent);
-}
-
-.services-cta p {
-  margin: 0;
-  font-weight: 600;
-}
-
-.services-cta__button {
-  background: var(--color-on-accent);
-  color: var(--color-accent);
-}
-
-.services-cta__button:hover {
-  background: var(--color-accent-tint);
-  color: var(--color-accent);
-}
-
-.services-cta__button:focus-visible {
-  outline-color: var(--color-on-accent);
-}
-
-/* Just above the breakpoint the narrowest columns need an extra line, so the lists still start level. */
-@media (min-width: 1200px) and (max-width: 1279px) {
-  .service-column__title {
-    min-height: 3.9em;
+@media (prefers-reduced-motion: reduce) {
+  .service-column {
+    animation: none;
   }
 
-  .service-column__summary {
-    min-height: 4.2em;
+  .service-column:hover .service-column__icon svg {
+    transform: none;
+  }
+
+  .service-column__link:hover span,
+  .service-column__link:focus-visible span {
+    transform: none;
   }
 }
 
@@ -1784,9 +1829,8 @@ address {
     padding: 0;
   }
 
-  .service-column__title {
-    min-height: 0;
-    margin: 0;
+  .service-column.is-open .service-column__list {
+    margin-top: var(--space-half);
   }
 
   .service-column__toggle {
@@ -1820,24 +1864,12 @@ address {
     transition: transform var(--duration) var(--ease);
   }
 
-  .service-column__toggle.is-open > svg {
+  .service-column.is-open .service-column__toggle > svg {
     transform: rotate(180deg);
   }
 
   .service-column__panel {
     padding: 0 var(--space-2) var(--space-2);
-  }
-
-  .service-column__summary {
-    min-height: 0;
-  }
-
-  .services-cta {
-    padding: var(--space-2);
-  }
-
-  .services-cta__button {
-    width: 100%;
   }
 }
 
@@ -2714,4 +2746,106 @@ address {
 .field__topic svg {
   flex-shrink: 0;
   margin-top: 2px;
+}
+
+/* Loading placeholders while the services load from the API */
+.skeleton {
+  display: block;
+  border-radius: 6px;
+  background: linear-gradient(
+    90deg,
+    var(--color-surface-strong) 25%,
+    var(--color-surface) 50%,
+    var(--color-surface-strong) 75%
+  );
+  background-size: 200% 100%;
+  animation: skeleton-shimmer 1.2s ease-in-out infinite;
+}
+
+.skeleton--icon {
+  flex-shrink: 0;
+  width: 40px;
+  height: 40px;
+  border-radius: 10px;
+}
+
+.skeleton--title {
+  width: 70%;
+  height: 1.1em;
+}
+
+.skeleton--line {
+  width: 85%;
+  height: 0.9em;
+  margin-block: 5px;
+}
+
+.skeleton--line:nth-child(even) {
+  width: 65%;
+}
+
+.skeleton--menu {
+  width: 220px;
+  height: 1em;
+  margin: 12px;
+}
+
+.service-column--skeleton {
+  animation: none;
+}
+
+@keyframes skeleton-shimmer {
+  from {
+    background-position: 100% 0;
+  }
+  to {
+    background-position: -100% 0;
+  }
+}
+
+/* Page for a service added in the admin area, before it has detailed content */
+.simple-service__heading {
+  margin-bottom: var(--space-3);
+  font-size: var(--text-2xl);
+}
+
+.simple-service__list {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: var(--space-2);
+  list-style: none;
+}
+
+.simple-service__list a {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: var(--space-2);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius);
+  background: var(--color-bg);
+  color: var(--color-text);
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.simple-service__list a:hover {
+  border-color: var(--color-accent);
+  color: var(--color-accent);
+}
+
+.simple-service__list span {
+  flex: 1;
+}
+
+.simple-service__list svg {
+  flex-shrink: 0;
+  color: var(--color-accent);
+}
+
+/* Admin and Logout buttons in the mobile menu when an admin is signed in */
+.mobile-menu__account {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--space-1);
 }

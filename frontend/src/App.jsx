@@ -1,8 +1,10 @@
 import { lazy, Suspense, useEffect } from 'react';
 import { Navigate, Route, Routes, useLocation } from 'react-router-dom';
+import AuthProvider from './components/AuthProvider.jsx';
 import BackToTop from './components/BackToTop.jsx';
 import Footer from './components/Footer.jsx';
 import Navbar from './components/Navbar.jsx';
+import ServicesProvider from './components/ServicesProvider.jsx';
 import SiteProvider from './components/SiteProvider.jsx';
 import ServicesPage from './pages/ServicesPage.jsx';
 
@@ -12,6 +14,8 @@ const SubServiceDetailPage = lazy(() => import('./pages/SubServiceDetailPage.jsx
 const AboutPage = lazy(() => import('./pages/AboutPage.jsx'));
 const ContactPage = lazy(() => import('./pages/ContactPage.jsx'));
 const NotFoundPage = lazy(() => import('./pages/NotFoundPage.jsx'));
+// The admin area has its own layout and is only downloaded by people who open it.
+const AdminApp = lazy(() => import('./admin/AdminApp.jsx'));
 
 export default function App() {
   const { pathname, hash } = useLocation();
@@ -23,6 +27,28 @@ export default function App() {
     else window.scrollTo(0, 0);
   }, [pathname, hash]);
 
+  if (pathname === '/admin' || pathname.startsWith('/admin/')) {
+    return (
+      <AuthProvider>
+        <Suspense fallback={<div className="page-loading" />}>
+          <Routes>
+            <Route path="/admin/*" element={<AdminApp />} />
+          </Routes>
+        </Suspense>
+      </AuthProvider>
+    );
+  }
+
+  return (
+    <AuthProvider>
+      <ServicesProvider>
+        <PublicSite />
+      </ServicesProvider>
+    </AuthProvider>
+  );
+}
+
+function PublicSite() {
   return (
     <SiteProvider>
       <a className="skip-link" href="#main">

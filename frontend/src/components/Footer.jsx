@@ -1,8 +1,8 @@
 import { Link, useLocation } from 'react-router-dom';
 import logo from '../assets/logo.webp';
+import { useServices } from '../context/services.js';
 import { useSite } from '../context/site.js';
 import { company } from '../data/company.js';
-import { services } from '../data/services.js';
 import Icon from './Icon.jsx';
 
 const quickLinks = [
@@ -14,6 +14,7 @@ const quickLinks = [
 export default function Footer() {
   const { pathname } = useLocation();
   const { openLegal, openCookieSettings } = useSite();
+  const { services } = useServices();
 
   return (
     <footer className="site-footer">

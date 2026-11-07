@@ -8,16 +8,38 @@ import Photo from '../components/Photo.jsx';
 import ProcessSteps from '../components/ProcessSteps.jsx';
 import Reveal from '../components/Reveal.jsx';
 import SectionHeading from '../components/SectionHeading.jsx';
+import SimpleServicePage from '../components/SimpleServicePage.jsx';
 import SubServiceCard from '../components/SubServiceCard.jsx';
+import { useServices } from '../context/services.js';
 import { images } from '../data/images.js';
-import { getServiceBySlug, getSubService } from '../data/services.js';
+import { getSubService } from '../data/services.js';
 import NotFoundPage from './NotFoundPage.jsx';
 
 export default function SubServiceDetailPage() {
   const { slug, subSlug } = useParams();
-  const service = getServiceBySlug(slug);
+  const { getService, status } = useServices();
+  if (status === 'loading') return <div className="page-loading" />;
+  const service = getService(slug);
   const sub = getSubService(service, subSlug);
   if (!sub) return <NotFoundPage />;
+  if (!sub.overview) {
+    const serviceUrl = `/services/${service.slug}`;
+    return (
+      <SimpleServicePage
+        breadcrumb={[
+          { label: 'Home', to: '/' },
+          { label: 'Services', to: '/#services' },
+          { label: service.title, to: serviceUrl },
+          { label: sub.title, to: `${serviceUrl}/${sub.slug}` },
+        ]}
+        label={service.title}
+        title={sub.title}
+        intro={`Part of our ${service.title}.`}
+        contactLink={`/contact?service=${service.slug}&topic=${sub.slug}`}
+        back={{ to: serviceUrl, label: `Back to ${service.title}` }}
+      />
+    );
+  }
   return <SubServiceDetail service={service} sub={sub} />;
 }
 

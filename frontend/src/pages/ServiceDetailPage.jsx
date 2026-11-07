@@ -9,19 +9,44 @@ import ProcessSteps from '../components/ProcessSteps.jsx';
 import Reveal from '../components/Reveal.jsx';
 import SectionHeading from '../components/SectionHeading.jsx';
 import ServiceCard from '../components/ServiceCard.jsx';
+import SimpleServicePage from '../components/SimpleServicePage.jsx';
 import SubServiceCard from '../components/SubServiceCard.jsx';
+import { useServices } from '../context/services.js';
 import { images } from '../data/images.js';
-import { getServiceBySlug } from '../data/services.js';
 import NotFoundPage from './NotFoundPage.jsx';
 
 export default function ServiceDetailPage() {
   const { slug } = useParams();
-  const service = getServiceBySlug(slug);
+  const { getService, status } = useServices();
+  if (status === 'loading') return <div className="page-loading" />;
+  const service = getService(slug);
   if (!service) return <NotFoundPage />;
-  return <ServiceDetail service={service} />;
+  if (!service.overview) {
+    return (
+      <SimpleServicePage
+        breadcrumb={[
+          { label: 'Home', to: '/' },
+          { label: 'Services', to: '/#services' },
+          { label: service.title, to: `/services/${service.slug}` },
+        ]}
+        label="Service"
+        title={service.title}
+        intro={service.summary}
+        items={service.subServices.map((sub) => ({
+          title: sub.title,
+          icon: sub.icon,
+          to: `/services/${service.slug}/${sub.slug}`,
+        }))}
+        contactLink={`/contact?service=${service.slug}`}
+        back={{ to: '/', label: 'All services' }}
+      />
+    );
+  }
+  return <ServiceDetail service={service} getService={getService} />;
 }
 
-function ServiceDetail({ service }) {
+function ServiceDetail({ service, getService }) {
+  const related = service.related.map(getService).filter(Boolean);
   const contactLink = `/contact?service=${service.slug}`;
 
   return (
@@ -127,9 +152,9 @@ function ServiceDetail({ service }) {
         <div className="container">
           <SectionHeading id="related-title" eyebrow="Related services" title="Often combined with" />
           <div className="card-grid card-grid--two">
-            {service.related.map((relatedSlug) => (
-              <div key={relatedSlug} className="card-grid__item">
-                <ServiceCard service={getServiceBySlug(relatedSlug)} />
+            {related.map((relatedService) => (
+              <div key={relatedService.slug} className="card-grid__item">
+                <ServiceCard service={relatedService} />
               </div>
             ))}
           </div>

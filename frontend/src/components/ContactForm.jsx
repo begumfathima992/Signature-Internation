@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from 'react';
 import { useSite } from '../context/site.js';
 import { company } from '../data/company.js';
 import { countries, DEFAULT_COUNTRY, getCountry } from '../data/countries.js';
-import { services } from '../data/services.js';
+import { useServices } from '../context/services.js';
 import Icon from './Icon.jsx';
 
 const API_URL = import.meta.env.VITE_API_URL;
@@ -65,6 +65,7 @@ async function submitContact(payload) {
 
 export default function ContactForm({ initialService = '', topic }) {
   const { openLegal } = useSite();
+  const { services } = useServices();
   const [values, setValues] = useState({
     name: '',
     email: '',

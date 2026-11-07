@@ -1,8 +1,9 @@
 import { useEffect, useRef, useState } from 'react';
 import { Link, NavLink, useLocation } from 'react-router-dom';
 import logo from '../assets/logo.webp';
+import { useAuth } from '../context/auth.js';
+import { useServices } from '../context/services.js';
 import { company } from '../data/company.js';
-import { services } from '../data/services.js';
 import Icon from './Icon.jsx';
 
 const links = [
@@ -13,6 +14,8 @@ const links = [
 const FOCUSABLE = 'a[href], button:not([disabled])';
 
 export default function Navbar() {
+  const { services, status: servicesStatus } = useServices();
+  const { admin, logout } = useAuth();
   const [open, setOpen] = useState(false);
   const [servicesOpen, setServicesOpen] = useState(false);
   const { pathname } = useLocation();
@@ -123,25 +126,56 @@ export default function Navbar() {
               >
                 <Icon name="chevronDown" size={16} />
               </button>
-              <ul id="services-menu" className="nav-dropdown__menu" hidden={!servicesOpen}>
-                {services.map((service) => (
-                  <li key={service.slug}>
-                    <Link to={`/services/${service.slug}`} className="nav-dropdown__link">
-                      <Icon name={service.icon} size={18} />
-                      {service.title}
-                    </Link>
-                  </li>
-                ))}
+              <ul
+                id="services-menu"
+                className="nav-dropdown__menu"
+                hidden={!servicesOpen}
+                aria-busy={servicesStatus === 'loading'}
+              >
+                {servicesStatus === 'loading'
+                  ? [1, 2, 3, 4, 5].map((key) => (
+                      <li key={key} aria-hidden="true">
+                        <span className="skeleton skeleton--menu" />
+                      </li>
+                    ))
+                  : services.map((service) => (
+                      <li key={service.slug}>
+                        <Link to={`/services/${service.slug}`} className="nav-dropdown__link">
+                          <Icon name={service.icon} size={18} />
+                          {service.title}
+                        </Link>
+                      </li>
+                    ))}
               </ul>
             </li>
             {links.slice(1).map((link) => (
               <li key={link.to}>{navLink(link, 'nav-link')}</li>
             ))}
-            <li>
+            <li className="navbar__cta">
               <NavLink to="/contact" className="button button--primary button--sm">
                 Contact us
               </NavLink>
             </li>
+            {admin ? (
+              <>
+                <li>
+                  <Link to="/admin" className="button button--ghost button--sm">
+                    Admin
+                  </Link>
+                </li>
+                <li>
+                  <button type="button" className="button button--ghost button--sm" onClick={logout}>
+                    Logout
+                  </button>
+                </li>
+              </>
+            ) : (
+              <li>
+                <Link to="/admin/login" className="button button--ghost button--sm">
+                  Login
+                </Link>
+              </li>
+            )}
           </ul>
         </nav>
 
@@ -197,6 +231,20 @@ export default function Navbar() {
           <Link to="/contact" className="button button--primary button--block">
             Contact us
           </Link>
+          {admin ? (
+            <div className="mobile-menu__account">
+              <Link to="/admin" className="button button--secondary">
+                Admin
+              </Link>
+              <button type="button" className="button button--secondary" onClick={logout}>
+                Logout
+              </button>
+            </div>
+          ) : (
+            <Link to="/admin/login" className="button button--secondary button--block">
+              Login
+            </Link>
+          )}
           <div className="mobile-menu__contact">
             <a href={`tel:${company.phoneHref}`}>
               <Icon name="phone" size={18} /> {company.phone}

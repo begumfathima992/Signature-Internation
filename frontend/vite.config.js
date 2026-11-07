@@ -19,7 +19,7 @@ function seoFiles(siteUrl) {
       this.emitFile({
         type: 'asset',
         fileName: 'robots.txt',
-        source: `User-agent: *\nAllow: /\n\nSitemap: ${siteUrl}/sitemap.xml\n`,
+        source: `User-agent: *\nAllow: /\nDisallow: /admin\n\nSitemap: ${siteUrl}/sitemap.xml\n`,
       });
     },
   };
@@ -33,5 +33,8 @@ export default defineConfig(({ mode }) => {
 
   return {
     plugins: [react(), seoFiles(siteUrl)],
+    server: {
+      proxy: { '/api': 'http://localhost:4000' },
+    },
   };
 });

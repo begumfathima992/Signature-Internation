@@ -1,9 +1,10 @@
 import { Link } from 'react-router-dom';
 import Illustration from '../components/Illustration.jsx';
 import PageMeta from '../components/PageMeta.jsx';
-import { services } from '../data/services.js';
+import { useServices } from '../context/services.js';
 
 export default function NotFoundPage() {
+  const { services } = useServices();
   return (
     <>
       <PageMeta title="Page not found" description="The page you were looking for could not be found." noIndex />

@@ -1,0 +1,114 @@
+[
+  {
+    "slug": "management-consultancy",
+    "title": "Management Consultancy Services",
+    "description": "Practical advice on strategy, operations and sustainable growth.",
+    "icon": "briefcase",
+    "items": [
+      {
+        "slug": "business-consultancy",
+        "title": "Business Consultancy Services"
+      },
+      {
+        "slug": "business-development",
+        "title": "Business Development"
+      },
+      {
+        "slug": "strategy-development",
+        "title": "Strategy Development"
+      },
+      {
+        "slug": "change-management",
+        "title": "Change Management"
+      },
+      {
+        "slug": "organizational-development",
+        "title": "Organizational Development"
+      },
+      {
+        "slug": "business-process-re-engineering",
+        "title": "Business Process Re-engineering"
+      },
+      {
+        "slug": "project-management",
+        "title": "Project Management"
+      }
+    ]
+  },
+  {
+    "slug": "web-development",
+    "title": "Web Development Services",
+    "description": "Professional websites, mobile app designs and user interfaces.",
+    "icon": "globe",
+    "items": [
+      {
+        "slug": "website-design",
+        "title": "Website Design"
+      },
+      {
+        "slug": "mobile-app-design",
+        "title": "Mobile App Design"
+      },
+      {
+        "slug": "creative-design-ui-development",
+        "title": "Creative Design / User Interface Development"
+      }
+    ]
+  },
+  {
+    "slug": "digital-marketing",
+    "title": "Digital Marketing Services",
+    "description": "Content creation and social media management that keeps your brand active.",
+    "icon": "chart",
+    "items": [
+      {
+        "slug": "marketing-content",
+        "title": "Marketing Content Creation and Management"
+      },
+      {
+        "slug": "social-media-management",
+        "title": "Social Media Management"
+      }
+    ]
+  },
+  {
+    "slug": "business-advertisement",
+    "title": "Business Advertisement Services",
+    "description": "Logos, flyers, brochures and trademark support for your brand.",
+    "icon": "megaphone",
+    "items": [
+      {
+        "slug": "logo-design",
+        "title": "Logo Design"
+      },
+      {
+        "slug": "flyer-design",
+        "title": "Flyer Design"
+      },
+      {
+        "slug": "brochure-design",
+        "title": "Brochure Design"
+      },
+      {
+        "slug": "trademark",
+        "title": "Trademark"
+      }
+    ]
+  },
+  {
+    "slug": "general-services",
+    "title": "General Services",
+    "description": "Passport and travel documentation support for the US, UK and India.",
+    "icon": "layers",
+    "items": [
+      {
+        "slug": "passport-assistance",
+        "title": "Passport Assistance (New and Renewal of Applications)"
+      },
+      {
+        "slug": "travel-documentation-support",
+        "title": "Travel Documentation Support (US, UK, India)"
+      }
+    ]
+  }
+]
