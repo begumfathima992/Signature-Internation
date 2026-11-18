@@ -38,7 +38,7 @@
   {
     "slug": "web-development",
     "title": "Web Development Services",
-    "description": "Professional websites, mobile app designs and user interfaces.",
+    "description": "Professional websites, mobile app designs and graphic design.",
     "icon": "globe",
     "items": [
       {
@@ -50,8 +50,8 @@
         "title": "Mobile App Design"
       },
       {
-        "slug": "creative-design-ui-development",
-        "title": "Creative Design / User Interface Development"
+        "slug": "graphic-design",
+        "title": "Graphic Design"
       }
     ]
   },

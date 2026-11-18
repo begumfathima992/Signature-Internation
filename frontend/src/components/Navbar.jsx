@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from 'react';
 import { Link, NavLink, useLocation } from 'react-router-dom';
 import logo from '../assets/logo.webp';
 import { useAuth } from '../context/auth.js';
+import { useContactDetails } from '../context/contact.js';
 import { useServices } from '../context/services.js';
 import { company } from '../data/company.js';
 import Icon from './Icon.jsx';
@@ -16,6 +17,7 @@ const FOCUSABLE = 'a[href], button:not([disabled])';
 export default function Navbar() {
   const { services, status: servicesStatus } = useServices();
   const { admin, logout } = useAuth();
+  const { contact, status: contactStatus } = useContactDetails();
   const [open, setOpen] = useState(false);
   const [servicesOpen, setServicesOpen] = useState(false);
   const { pathname } = useLocation();
@@ -245,12 +247,12 @@ export default function Navbar() {
               Login
             </Link>
           )}
-          <div className="mobile-menu__contact">
-            <a href={`tel:${company.phoneHref}`}>
-              <Icon name="phone" size={18} /> {company.phone}
+          <div className={`mobile-menu__contact${contactStatus === 'loading' ? ' is-loading' : ''}`}>
+            <a href={`tel:${contact.phoneHref}`}>
+              <Icon name="phone" size={18} /> {contact.phone}
             </a>
-            <a href={`mailto:${company.email}`}>
-              <Icon name="mail" size={18} /> {company.email}
+            <a href={`mailto:${contact.email}`}>
+              <Icon name="mail" size={18} /> {contact.email}
             </a>
           </div>
         </div>

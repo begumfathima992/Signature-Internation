@@ -11,6 +11,7 @@ import { company } from '../data/company.js';
 import { servicesFaqs } from '../data/faqs.js';
 import { whyChooseUs } from '../data/highlights.js';
 import { process } from '../data/process.js';
+import { useContactDetails } from '../context/contact.js';
 import { useServices } from '../context/services.js';
 import { getSubService } from '../data/services.js';
 
@@ -23,6 +24,7 @@ const nextSteps = [
 export default function ContactPage() {
   const [params] = useSearchParams();
   const { getService } = useServices();
+  const { contact, status: contactStatus } = useContactDetails();
   const service = getService(params.get('service'));
   const topic = getSubService(service, params.get('topic'));
 
@@ -49,7 +51,10 @@ export default function ContactPage() {
             </div>
           </div>
 
-          <div className="contact-aside">
+          <div
+            className={`contact-aside${contactStatus === 'loading' ? ' is-loading' : ''}`}
+            aria-busy={contactStatus === 'loading'}
+          >
             <div className="card">
               <h2 className="card__title">Contact details</h2>
               <ul className="detail-list">
@@ -59,7 +64,7 @@ export default function ContactPage() {
                   </span>
                   <div>
                     <h3>Email</h3>
-                    <a href={`mailto:${company.email}`}>{company.email}</a>
+                    <a href={`mailto:${contact.email}`}>{contact.email}</a>
                   </div>
                 </li>
                 <li>
@@ -68,7 +73,7 @@ export default function ContactPage() {
                   </span>
                   <div>
                     <h3>Phone</h3>
-                    <a href={`tel:${company.phoneHref}`}>{company.phone}</a>
+                    <a href={`tel:${contact.phoneHref}`}>{contact.phone}</a>
                   </div>
                 </li>
                 <li>
@@ -78,8 +83,8 @@ export default function ContactPage() {
                   <div>
                     <h3>Address</h3>
                     <address>
-                      {company.address.map((line) => (
-                        <span key={line}>
+                      {contact.address.map((line, index) => (
+                        <span key={index}>
                           {line}
                           <br />
                         </span>
@@ -94,8 +99,8 @@ export default function ContactPage() {
                   <div>
                     <h3>Opening hours</h3>
                     <dl className="hours">
-                      {company.hours.map((row) => (
-                        <div key={row.days}>
+                      {contact.hours.map((row, index) => (
+                        <div key={index}>
                           <dt>{row.days}</dt>
                           <dd>{row.time}</dd>
                         </div>
@@ -109,11 +114,11 @@ export default function ContactPage() {
             <MapCard />
 
             <div className="quick-contact">
-              <a href={`tel:${company.phoneHref}`} className="button button--secondary">
+              <a href={`tel:${contact.phoneHref}`} className="button button--secondary">
                 <Icon name="phone" size={18} /> Call us
               </a>
               <a
-                href={`https://wa.me/${company.whatsapp}`}
+                href={`https://wa.me/${contact.whatsapp}`}
                 className="button button--secondary"
                 target="_blank"
                 rel="noopener noreferrer"

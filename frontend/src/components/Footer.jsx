@@ -1,5 +1,6 @@
 import { Link, useLocation } from 'react-router-dom';
 import logo from '../assets/logo.webp';
+import { useContactDetails } from '../context/contact.js';
 import { useServices } from '../context/services.js';
 import { useSite } from '../context/site.js';
 import { company } from '../data/company.js';
@@ -15,6 +16,8 @@ export default function Footer() {
   const { pathname } = useLocation();
   const { openLegal, openCookieSettings } = useSite();
   const { services } = useServices();
+  const { contact, status: contactStatus } = useContactDetails();
+  const hideUntilLoaded = contactStatus === 'loading' ? ' is-loading' : '';
 
   return (
     <footer className="site-footer">
@@ -26,8 +29,8 @@ export default function Footer() {
               <p>Tell us what you need and we will reply within one working day.</p>
             </div>
             <div className="contact-strip__actions">
-              <a className="contact-strip__link" href={`tel:${company.phoneHref}`}>
-                <Icon name="phone" size={18} /> {company.phone}
+              <a className={`contact-strip__link${hideUntilLoaded}`} href={`tel:${contact.phoneHref}`}>
+                <Icon name="phone" size={18} /> {contact.phone}
               </a>
               <Link to="/contact" className="button button--primary">
                 Send a message
@@ -74,18 +77,18 @@ export default function Footer() {
 
         <div>
           <h2 className="footer__heading">Contact</h2>
-          <ul className="footer__list footer__contact">
+          <ul className={`footer__list footer__contact${hideUntilLoaded}`}>
             <li>
               <Icon name="mail" size={18} />
-              <a href={`mailto:${company.email}`}>{company.email}</a>
+              <a href={`mailto:${contact.email}`}>{contact.email}</a>
             </li>
             <li>
               <Icon name="phone" size={18} />
-              <a href={`tel:${company.phoneHref}`}>{company.phone}</a>
+              <a href={`tel:${contact.phoneHref}`}>{contact.phone}</a>
             </li>
             <li>
               <Icon name="mapPin" size={18} />
-              <address>{company.address.join(', ')}</address>
+              <address>{contact.address.join(', ')}</address>
             </li>
           </ul>
         </div>

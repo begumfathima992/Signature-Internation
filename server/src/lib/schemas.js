@@ -48,6 +48,29 @@ const newPassword = z.string().min(12, 'Use at least 12 characters.').max(72, 'U
 const token = z.string().trim().min(20, 'This link is not valid.').max(100, 'This link is not valid.');
 
 export const inviteInput = z.object({ name, email });
+
+const shortText = (label, max) =>
+  z.string().trim().min(1, `Please enter ${label}.`).max(max, `Keep it under ${max} characters.`);
+
+export const contactInput = z.object({
+  email,
+  phone: z
+    .string()
+    .trim()
+    .regex(/^\+?[\d\s()-]{6,30}$/, 'Use digits, spaces, brackets and an optional + only, e.g. +44 (0)20 7946 0123.'),
+  // Stored as digits only, the form wa.me links need: spaces, + and brackets are removed.
+  whatsapp: z
+    .string()
+    .transform((value) => value.replace(/\D/g, ''))
+    .pipe(z.string().regex(/^\d{8,15}$/, 'Enter the full number with country code, e.g. 44 7946 000000.')),
+  address: z
+    .array(z.string().trim().max(80, 'Keep each line under 80 characters.'))
+    .transform((lines) => lines.filter(Boolean))
+    .pipe(z.array(z.string()).min(1, 'Please enter the address.').max(6, 'Use 6 lines or fewer.')),
+  hours: z
+    .array(z.object({ days: shortText('the days', 40), time: shortText('the times', 40) }))
+    .max(7, 'Use 7 rows or fewer.'),
+});
 export const tokenQuery = z.object({ token });
 export const acceptInput = z.object({ token, name: name.optional(), password: newPassword });
 export const adminStatusInput = z.object({ isActive: z.boolean() });
@@ -66,7 +89,7 @@ const actions = [
   'RESET_LINK',
   'PASSWORD_RESET',
 ];
-const entities = ['ServiceCategory', 'ServiceItem', 'Admin'];
+const entities = ['ServiceCategory', 'ServiceItem', 'Admin', 'ContactDetails'];
 const dateOnly = z.string().regex(/^\d{4}-\d{2}-\d{2}$/, 'Use YYYY-MM-DD.');
 
 export const auditQuery = z.object({

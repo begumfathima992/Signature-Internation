@@ -30,7 +30,7 @@ https://unsplash.com/photos/_4tpElFQemQ
 | `sub-project-*.webp`              | Project Management sub-service page and card               | Eden Constantino          | https://unsplash.com/photos/OXmym9cuaEY |
 | `sub-website-*.webp`              | Website Design sub-service page and card                   | Compagnons                | https://unsplash.com/photos/4UGmm3WRUoQ |
 | `sub-mobile-app-*.webp`           | Mobile App Design sub-service page and card                | Rahul Chakraborty         | https://unsplash.com/photos/xsGxhtAsfSA |
-| `sub-ui-design-*.webp`            | Creative Design / UI Development sub-service page and card | Amélie Mourichon          | https://unsplash.com/photos/sv8oOQaUb-o |
+| `sub-ui-design-*.webp`            | Graphic Design sub-service page and card | Amélie Mourichon          | https://unsplash.com/photos/sv8oOQaUb-o |
 | `sub-content-*.webp`              | Marketing Content Creation sub-service page and card       | Jakub Żerdzicki           | https://unsplash.com/photos/aSoQQLyPe1U |
 | `sub-social-*.webp`               | Social Media Management sub-service page and card          | Nathan Dumlao             | https://unsplash.com/photos/kLmt1mpGJVg |
 | `sub-logo-*.webp`                 | Logo Design sub-service page and card                      | Kelly Sikkema             | https://unsplash.com/photos/Dx1b5ucschA |

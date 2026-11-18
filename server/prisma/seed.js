@@ -53,8 +53,16 @@ async function seedAdmins() {
   }
 }
 
+// The contact details shown on the website; only added if none are saved yet.
+async function seedContactDetails() {
+  const url = new URL('./contact-data.json', import.meta.url);
+  const details = JSON.parse(await readFile(url, 'utf8'));
+  await prisma.contactDetails.upsert({ where: { id: 1 }, update: {}, create: { id: 1, ...details } });
+}
+
 try {
   const categoryCount = await seedServices();
+  await seedContactDetails();
   await seedAdmins();
   const itemCount = await prisma.serviceItem.count();
   console.log(`Seed complete: ${categoryCount} categories, ${itemCount} items, ${await prisma.admin.count()} admins.`);

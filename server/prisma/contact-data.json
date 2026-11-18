@@ -1,0 +1,10 @@
+{
+  "email": "hello@signatureinternational.example",
+  "phone": "+44 (0)20 7946 0123",
+  "whatsapp": "442079460123",
+  "address": ["1 Sample Street", "London EC1A 1AA", "United Kingdom"],
+  "hours": [
+    { "days": "Monday to Friday", "time": "9:00am to 5:30pm" },
+    { "days": "Saturday and Sunday", "time": "Closed" }
+  ]
+}

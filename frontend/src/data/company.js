@@ -1,4 +1,6 @@
 // Company details used across the site.
+// Email, phone, WhatsApp, address and hours are edited in the admin area (Contact details). The values
+// here are only used until those load, or if the API is down.
 // TODO(client): every value marked PLACEHOLDER must be replaced before launch.
 const address = ['1 Sample Street', 'London EC1A 1AA', 'United Kingdom']; // PLACEHOLDER
 
@@ -9,7 +11,6 @@ export const company = {
     'Signature International Services Limited provides management consultancy, web development, digital marketing, business advertisement and general business services.',
 
   email: 'hello@signatureinternational.example', // PLACEHOLDER
-  helpEmail: 'help@signatureinternational.example', // PLACEHOLDER: shown when the form fails
   phone: '+44 (0)20 7946 0123', // PLACEHOLDER (Ofcom drama number)
   phoneHref: '+442079460123', // PLACEHOLDER
   whatsapp: '442079460123', // PLACEHOLDER: international format, digits only
@@ -24,6 +25,5 @@ export const company = {
   map: {
     enabled: import.meta.env.VITE_ENABLE_MAP === 'true',
     embedUrl: '', // PLACEHOLDER: Google Maps > Share > Embed a map > copy the src URL
-    linkUrl: `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(address.join(', '))}`,
   },
 };

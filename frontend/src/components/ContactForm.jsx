@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
 import { useSite } from '../context/site.js';
-import { company } from '../data/company.js';
 import { countries, DEFAULT_COUNTRY, getCountry } from '../data/countries.js';
+import { useContactDetails } from '../context/contact.js';
 import { useServices } from '../context/services.js';
 import Icon from './Icon.jsx';
 
@@ -66,6 +66,7 @@ async function submitContact(payload) {
 export default function ContactForm({ initialService = '', topic }) {
   const { openLegal } = useSite();
   const { services } = useServices();
+  const { contact } = useContactDetails();
   const [values, setValues] = useState({
     name: '',
     email: '',
@@ -184,7 +185,7 @@ export default function ContactForm({ initialService = '', topic }) {
           <strong>Sorry, your request could not be sent.</strong>
           <p>
             {serverMessage && <>{serverMessage} </>}
-            Please try again, or email us at <a href={`mailto:${company.helpEmail}`}>{company.helpEmail}</a>.
+            Please try again, or email us at <a href={`mailto:${contact.email}`}>{contact.email}</a>.
           </p>
           <button
             type="button"

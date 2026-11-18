@@ -49,6 +49,17 @@ model AdminInvite {
   @@index([email])
 }
 
+// The company's contact details shown on the website (Contact page, footer, menu). There is only ever one row.
+model ContactDetails {
+  id        Int      @id @default(1)
+  email     String
+  phone     String
+  whatsapp  String // digits only, international format, e.g. 447946000000
+  address   String[]
+  hours     Json // [{ "days": "Monday to Friday", "time": "9:00am to 5:30pm" }]
+  updatedAt DateTime @updatedAt
+}
+
 model ServiceCategory {
   id          String    @id @default(uuid())
   slug        String    @unique
@@ -103,6 +114,7 @@ enum AuditEntity {
   ServiceCategory
   ServiceItem
   Admin
+  ContactDetails
 }
 
 // Append-only: the API has no way to update or delete these rows.

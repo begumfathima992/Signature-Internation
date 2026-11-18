@@ -100,6 +100,13 @@ These `ADMIN…` values are only used once, to create the first account. After t
 
 Never commit `.env` files. Only the `.env.example` files, which hold placeholders, are in git.
 
+## Contact details
+
+The email, phone, WhatsApp number, address and opening hours are edited in the admin area under **Contact details**.
+They appear on the Contact page, in the footer, in the mobile menu, on the map card and in the privacy policy. The seed
+loads the starting values from `server/prisma/contact-data.json`; until an admin saves new ones, or if the API is down,
+the website uses the values in `frontend/src/data/company.js`.
+
 ## How the services data works
 
 - The API (`GET /api/services`) controls which services exist, their names, icons, order and visibility.

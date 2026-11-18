@@ -1,3 +1,4 @@
+import { useContactDetails } from '../context/contact.js';
 import { useSite } from '../context/site.js';
 import { company } from '../data/company.js';
 import Icon from './Icon.jsx';
@@ -6,7 +7,8 @@ import Icon from './Icon.jsx';
 // and the visitor has accepted cookies. Otherwise shows a light placeholder.
 export default function MapCard() {
   const { consent, openCookieSettings } = useSite();
-  const { enabled, embedUrl, linkUrl } = company.map;
+  const { contact } = useContactDetails();
+  const { enabled, embedUrl } = company.map;
   const showMap = enabled && embedUrl && consent === 'accepted';
 
   return (
@@ -28,9 +30,14 @@ export default function MapCard() {
           <span className="map-card__pin">
             <Icon name="mapPin" size={22} />
           </span>
-          <p className="map-card__address">{company.address.join(', ')}</p>
+          <p className="map-card__address">{contact.address.join(', ')}</p>
           <div className="map-card__actions">
-            <a href={linkUrl} target="_blank" rel="noopener noreferrer" className="button button--secondary button--sm">
+            <a
+              href={contact.mapUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="button button--secondary button--sm"
+            >
               Open in Google Maps
             </a>
             {enabled && embedUrl && consent !== 'accepted' && (

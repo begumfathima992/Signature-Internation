@@ -1,10 +1,12 @@
 import { useEffect, useRef } from 'react';
+import { useContactDetails } from '../context/contact.js';
 import { legal } from '../data/legal.js';
 import Icon from './Icon.jsx';
 
 // Native <dialog> keeps focus inside the modal and closes on Escape.
 export default function LegalModal({ doc, onClose }) {
   const dialogRef = useRef(null);
+  const { contact } = useContactDetails();
   const content = doc ? legal[doc] : null;
 
   useEffect(() => {
@@ -35,7 +37,7 @@ export default function LegalModal({ doc, onClose }) {
               <section key={section.heading}>
                 <h3>{section.heading}</h3>
                 {section.body.map((paragraph) => (
-                  <p key={paragraph}>{paragraph}</p>
+                  <p key={paragraph}>{paragraph.replaceAll('{email}', contact.email)}</p>
                 ))}
               </section>
             ))}

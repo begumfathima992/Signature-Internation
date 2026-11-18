@@ -27,21 +27,13 @@ export default function ServicesPage() {
         title="Services"
         description="Management consultancy, web development, digital marketing, business advertisement and general business services from Signature International Services Limited."
       />
-      {/* The section heading below leads the page; the h1 is for screen readers and search engines. */}
-      <h1 className="visually-hidden">Services from {company.name}</h1>
+      {/* The service columns lead the page; this heading is for screen readers and search engines. */}
+      <h1 id="services-title" className="visually-hidden">
+        Services from {company.name}
+      </h1>
 
       <section id="services" className="services-section" aria-labelledby="services-title">
         <div className="services-section__inner">
-          <header className="services-section__header">
-            <div>
-              <p className="services-section__label">Our services</p>
-              <h2 id="services-title">Complete business support, under one roof</h2>
-            </div>
-            <p className="services-section__intro">
-              Consultancy, digital, branding and travel documentation services for UK businesses.
-            </p>
-          </header>
-
           <div className="services-grid" aria-busy={status === 'loading'}>
             {status === 'loading'
               ? [7, 3, 2, 4, 2].map((count, index) => <SkeletonColumn key={index} count={count} />)

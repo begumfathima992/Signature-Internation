@@ -25,7 +25,7 @@ export function makeApp(config = testConfig()) {
 
 export async function resetDb() {
   await prisma.$executeRawUnsafe(
-    'TRUNCATE "AuditLog", "AdminInvite", "ServiceItem", "ServiceCategory", "Admin" RESTART IDENTITY CASCADE',
+    'TRUNCATE "AuditLog", "AdminInvite", "ServiceItem", "ServiceCategory", "ContactDetails", "Admin" RESTART IDENTITY CASCADE',
   );
 }
 

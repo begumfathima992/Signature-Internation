@@ -1250,3 +1250,89 @@
   justify-content: flex-start;
   padding: var(--space-2) 0;
 }
+
+/* Contact details page */
+.contact-form-admin {
+  gap: var(--space-3);
+}
+
+.contact-form-admin__grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: var(--space-2) var(--space-3);
+}
+
+.hours-editor {
+  display: grid;
+  gap: 12px;
+  margin: 0;
+  padding: 0;
+  border: 0;
+}
+
+.hours-editor legend {
+  margin-bottom: var(--space-1);
+  font-size: var(--text-sm);
+  font-weight: 600;
+}
+
+.hours-editor__row {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr) auto;
+  align-items: end;
+  gap: 12px;
+}
+
+.hours-editor__row .field label {
+  font-size: var(--text-xs);
+}
+
+.hours-editor__remove {
+  margin-bottom: 7px;
+}
+
+.hours-editor > .button {
+  justify-self: start;
+}
+
+.contact-form-admin__actions {
+  display: flex;
+  gap: var(--space-1);
+  padding-top: var(--space-2);
+  border-top: 1px solid var(--color-border);
+}
+
+@media (max-width: 719px) {
+  .contact-form-admin__grid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .hours-editor__row {
+    grid-template-columns: minmax(0, 1fr) auto;
+  }
+
+  .hours-editor__row .field:first-child {
+    grid-column: 1 / -1;
+  }
+}
+
+/* Phones: the menu links get their own row and wrap, so the bar never runs off the screen. */
+@media (max-width: 599px) {
+  .admin-sidebar nav {
+    flex-basis: 100%;
+    order: 3;
+  }
+
+  .admin-sidebar ul {
+    flex-wrap: wrap;
+  }
+
+  .admin-sidebar__link {
+    padding: 8px 10px;
+    white-space: nowrap;
+  }
+
+  .admin-sidebar__footer {
+    margin-left: auto;
+  }
+}

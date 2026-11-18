@@ -19,6 +19,7 @@ export const ENTITY_LABELS = {
   ServiceCategory: 'Category',
   ServiceItem: 'Item',
   Admin: 'Admin',
+  ContactDetails: 'Contact details',
 };
 
 export const FIELD_LABELS = {
@@ -33,6 +34,10 @@ export const FIELD_LABELS = {
   name: 'Name',
   email: 'Email',
   isActive: 'Can log in',
+  phone: 'Phone',
+  whatsapp: 'WhatsApp',
+  address: 'Address',
+  hours: 'Opening hours',
   expiresAt: 'Link expires',
 };
 
@@ -82,6 +87,12 @@ export function describeLog(log) {
 
 function describeUpdate(log) {
   const { before, after } = log;
+  if (log.entityType === 'ContactDetails') {
+    const fields = ['email', 'phone', 'whatsapp', 'address', 'hours']
+      .filter((field) => JSON.stringify(before[field]) !== JSON.stringify(after[field]))
+      .map((field) => FIELD_LABELS[field].toLowerCase());
+    return `Updated the contact details (${fields.join(', ').replace(/, ([^,]*)$/, ' and $1')})`;
+  }
   if (log.entityType === 'Admin') {
     return after.isActive ? `Reactivated ${after.name}’s account` : `Deactivated ${after.name}’s account`;
   }
@@ -123,6 +134,8 @@ function formatValue(field, value, present) {
   if (field === 'isVisible' || field === 'isActive') return value ? 'Yes' : 'No';
   if (field === 'sortOrder') return String(value + 1);
   if (field === 'deletedAt' || field === 'expiresAt') return formatDate(value);
+  if (field === 'address') return value.join(', ');
+  if (field === 'hours') return value.length ? value.map((row) => `${row.days}: ${row.time}`).join('; ') : '(none)';
   return String(value);
 }
 

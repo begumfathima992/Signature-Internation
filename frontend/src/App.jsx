@@ -2,6 +2,7 @@ import { lazy, Suspense, useEffect } from 'react';
 import { Navigate, Route, Routes, useLocation } from 'react-router-dom';
 import AuthProvider from './components/AuthProvider.jsx';
 import BackToTop from './components/BackToTop.jsx';
+import ContactProvider from './components/ContactProvider.jsx';
 import Footer from './components/Footer.jsx';
 import Navbar from './components/Navbar.jsx';
 import ServicesProvider from './components/ServicesProvider.jsx';
@@ -42,7 +43,9 @@ export default function App() {
   return (
     <AuthProvider>
       <ServicesProvider>
-        <PublicSite />
+        <ContactProvider>
+          <PublicSite />
+        </ContactProvider>
       </ServicesProvider>
     </AuthProvider>
   );

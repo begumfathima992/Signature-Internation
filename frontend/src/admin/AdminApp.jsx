@@ -4,6 +4,7 @@ import AcceptLinkPage from './AcceptLinkPage.jsx';
 import ActivityLogPage from './ActivityLogPage.jsx';
 import AdminLayout from './AdminLayout.jsx';
 import AdminsPage from './AdminsPage.jsx';
+import ContactDetailsPage from './ContactDetailsPage.jsx';
 import LoginPage from './LoginPage.jsx';
 import ServicesManager from './ServicesManager.jsx';
 import ToastProvider from './ToastProvider.jsx';
@@ -23,6 +24,7 @@ export default function AdminApp() {
           }
         >
           <Route index element={<ServicesManager />} />
+          <Route path="contact" element={<ContactDetailsPage />} />
           <Route path="admins" element={<AdminsPage />} />
           <Route path="activity" element={<ActivityLogPage />} />
         </Route>

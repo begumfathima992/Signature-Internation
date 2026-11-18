@@ -6,6 +6,7 @@ import { company } from '../data/company.js';
 
 const links = [
   { to: '/admin', label: 'Services', icon: 'layers', end: true },
+  { to: '/admin/contact', label: 'Contact details', icon: 'phone' },
   { to: '/admin/admins', label: 'Admins', icon: 'users' },
   { to: '/admin/activity', label: 'Activity log', icon: 'history' },
 ];

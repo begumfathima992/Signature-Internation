@@ -1,5 +1,6 @@
 // TODO(legal): generic template text. Must be reviewed by a qualified legal adviser
 // and completed with the company's registered details before the site goes live.
+// {email} is replaced with the contact email set in the admin area.
 import { company } from './company.js';
 
 export const legal = {
@@ -9,7 +10,7 @@ export const legal = {
       {
         heading: 'Who we are',
         body: [
-          `${company.name} (“we”, “us”) is responsible for the personal information collected through this website. You can contact us at ${company.email}.`,
+          `${company.name} (“we”, “us”) is responsible for the personal information collected through this website. You can contact us at {email}.`,
         ],
       },
       {

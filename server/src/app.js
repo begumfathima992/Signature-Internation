@@ -7,6 +7,7 @@ import { errorHandler, notFoundHandler } from './middleware/errors.js';
 import { adminsRouter } from './routes/admin-admins.js';
 import { auditLogsRouter } from './routes/admin-audit-logs.js';
 import { categoriesRouter } from './routes/admin-categories.js';
+import { adminContactRouter, publicContactRouter } from './routes/contact-details.js';
 import { authRouter } from './routes/auth.js';
 import { publicServicesRouter } from './routes/public-services.js';
 
@@ -29,12 +30,14 @@ export function createApp(config) {
   app.get('/api/health', (req, res) => res.json({ ok: true }));
   app.use('/api/auth', authRouter(config));
   app.use('/api/services', publicServicesRouter());
+  app.use('/api/contact-details', publicContactRouter());
 
   const admin = express.Router();
   admin.use(requireAdmin(config));
   admin.use('/categories', categoriesRouter());
   admin.use('/audit-logs', auditLogsRouter());
   admin.use('/admins', adminsRouter(config));
+  admin.use('/contact-details', adminContactRouter());
   app.use('/api/admin', admin);
 
   app.use(notFoundHandler);

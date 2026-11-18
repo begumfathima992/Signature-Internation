@@ -40,7 +40,7 @@ export const teams = [
   {
     icon: 'code',
     title: 'Web and digital team',
-    text: 'Designers who create websites, mobile app designs and user interfaces.',
+    text: 'Designers who create websites, mobile app designs and graphics.',
   },
   {
     icon: 'megaphone',
