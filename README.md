@@ -93,7 +93,7 @@ These `ADMIN…` values are only used once, to create the first account. After t
 
 | Variable          | Purpose                                                                                    |
 | ----------------- | ------------------------------------------------------------------------------------------ |
-| `VITE_SERVER_URL` | Address of the API, e.g. `https://api.example.co.uk`. Leave empty locally.                 |
+| `VITE_SERVER_URL` | Leave empty: the website reaches the API through its own `/api` address.                   |
 | `VITE_SITE_URL`   | Live site address, used for `sitemap.xml`, `robots.txt` and Open Graph tags.               |
 | `VITE_API_URL`    | Contact form backend. Still empty: the form has no backend yet and only simulates sending. |
 | `VITE_ENABLE_MAP` | `true` shows the Google Maps embed on the contact page.                                    |
@@ -134,21 +134,22 @@ the website uses the values in `frontend/src/data/company.js`.
 
 ## Deploying (Render)
 
-`render.yaml` describes both services: the API as a Node web service and the website as a static site. In Render,
-choose **New > Blueprint**, select this repository, then fill in every variable marked "sync: false" when asked.
+`render.yaml` describes both services: the API (`signature-international-api`, a Node web service) and the website
+(`signature-international`, a static site). In Render choose **New > Blueprint**, select this repository, and fill in
+every variable marked "sync: false" when asked.
 
-**Database.** Render's free PostgreSQL databases expire after a short trial period, so for a live site use one of:
+**Database.** Render's free PostgreSQL databases expire after a short trial period, so for a live site use
+[Neon](https://neon.tech) (free tier), Supabase, or Render's paid PostgreSQL. With Neon, copy the connection string
+with **connection pooling switched off** into `DATABASE_URL` (database migrations do not run through the pooler).
 
-- [Neon](https://neon.tech) (free tier) or [Supabase](https://supabase.com) (free tier): create a project and paste
-  its connection string into `DATABASE_URL`. With Neon, use the "pooled" string for the app.
-- Render's paid PostgreSQL.
+**Without a custom domain.** The website passes every `/api/...` request through to the API (the first rewrite in
+`render.yaml`), so the browser only ever talks to the website's address and the login cookie works. Set
+`SITE_ORIGIN` and `VITE_SITE_URL` to the website's address, for example `https://signature-international.onrender.com`.
+If Render gives the API a different address from `signature-international-api.onrender.com` (the name was taken),
+change the rewrite destination in `render.yaml` to match.
 
 After the first deploy, run the seed once from the API service's **Shell** tab: `npm run db:seed`. This loads the
-services and creates the client's first admin account from `ADMIN1_…`. Give the client that email and password; they
-can invite the second admin themselves.
+services and contact details and creates the first admin account from `ADMIN1_…`. Running it again is safe.
 
-**Domains (important for login).** The login cookie is `SameSite=Strict`, so the browser only sends it when the
-website and the API are on the same site. Two separate `*.onrender.com` addresses count as different sites, and
-login would not work. Use a custom domain for both, for example `www.example.co.uk` for the website and
-`api.example.co.uk` for the API, then set `SITE_ORIGIN` and `VITE_SERVER_URL` to match. This setup has not been
-tested on Render yet.
+**Adding the domain later.** Add it to the website service under **Settings > Custom Domains**, then change
+`SITE_ORIGIN` and `VITE_SITE_URL` to the new address and redeploy both services. The `/api` rewrite keeps working.

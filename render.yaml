@@ -1,9 +1,10 @@
 # Render Blueprint: the API (Node web service) and the website (static site).
 # Variables marked sync: false are entered in the Render dashboard, never committed.
-# Not yet deployed or tested on Render; see "Deploying" in README.md.
+# Without a custom domain, the website passes /api/* through to the API (see routes below), so the browser
+# sees one address and the login cookie works. See "Deploying" in README.md.
 services:
   - type: web
-    name: signature-api
+    name: signature-international-api
     runtime: node
     rootDir: server
     plan: starter
@@ -39,18 +40,20 @@ services:
         sync: false
 
   - type: web
-    name: signature-website
+    name: signature-international
     runtime: static
     rootDir: frontend
     buildCommand: npm ci && npm run build
     staticPublishPath: dist
     routes:
+      # Sends API calls to the API service. If Render gave the API a different address, change it here.
+      - type: rewrite
+        source: /api/*
+        destination: https://signature-international-api.onrender.com/api/*
       # Single-page app: every path loads index.html and React Router shows the right page.
       - type: rewrite
         source: /*
         destination: /index.html
     envVars:
-      - key: VITE_SERVER_URL
-        sync: false
       - key: VITE_SITE_URL
         sync: false
