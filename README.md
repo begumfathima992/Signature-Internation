@@ -148,8 +148,18 @@ with **connection pooling switched off** into `DATABASE_URL` (database migration
 If Render gives the API a different address from `signature-international-api.onrender.com` (the name was taken),
 change the rewrite destination in `render.yaml` to match.
 
-After the first deploy, run the seed once from the API service's **Shell** tab: `npm run db:seed`. This loads the
-services and contact details and creates the first admin account from `ADMIN1_…`. Running it again is safe.
+The API runs on Render's free plan for testing: it sleeps after 15 minutes without visitors, so the first page
+load after that takes up to a minute. Switch `plan` to `starter` for the real launch.
+
+After the first deploy, run the seed once. The free plan has no Shell tab, so run it from your own computer in the
+`server` folder, pointing at the live database (the empty `ADMIN2_*` stop your local second admin being copied):
+
+```bash
+DATABASE_URL="<live connection string>" ADMIN1_NAME="…" ADMIN1_EMAIL="…" ADMIN1_PASSWORD="…" \
+  ADMIN2_NAME= ADMIN2_EMAIL= ADMIN2_PASSWORD= npm run db:seed
+```
+
+This loads the services and contact details and creates the first admin account. Running it again is safe.
 
 **Adding the domain later.** Add it to the website service under **Settings > Custom Domains**, then change
 `SITE_ORIGIN` and `VITE_SITE_URL` to the new address and redeploy both services. The `/api` rewrite keeps working.
