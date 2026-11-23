@@ -22,10 +22,10 @@ beforeEach(async () => {
 });
 after(() => prisma.$disconnect());
 
-test('the website gets the built-in details until an admin saves new ones, cached for 60 seconds', async () => {
+test('the website gets the built-in details until an admin saves new ones, never kept stale by the browser', async () => {
   const res = await request(app).get('/api/contact-details');
   assert.equal(res.status, 200);
-  assert.equal(res.headers['cache-control'], 'public, max-age=60');
+  assert.equal(res.headers['cache-control'], 'no-cache');
   assert.equal(res.body.contact.email, 'hello@signatureinternational.example');
   assert.equal(res.body.contact.hours.length, 2);
 });

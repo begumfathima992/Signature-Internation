@@ -124,7 +124,7 @@ export default function ServicesManager() {
     try {
       const { item: saved } = await request(`${CATEGORIES}/${category.id}/items/${item.id}`, {
         method: 'PUT',
-        body: { title: item.title, slug: item.slug, isVisible: !item.isVisible },
+        body: { title: item.title, slug: item.slug, description: item.description, isVisible: !item.isVisible },
       });
       replaceCategory(category.id, (current) => ({
         ...current,

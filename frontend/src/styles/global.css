@@ -743,7 +743,7 @@ address {
 .page-header {
   position: relative;
   overflow: hidden;
-  padding: var(--space-10) 0 var(--space-8);
+  padding: var(--space-4) 0 var(--space-8);
   background: var(--color-bg);
 }
 
@@ -767,12 +767,12 @@ address {
   display: grid;
   grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr);
   gap: var(--space-8);
-  align-items: center;
+  align-items: start;
 }
 
 @media (max-width: 1023px) {
   .page-header {
-    padding: var(--space-8) 0 var(--space-6);
+    padding: var(--space-3) 0 var(--space-6);
   }
 
   .page-header--split .page-header__inner {
@@ -1499,39 +1499,6 @@ address {
   color: var(--color-text);
 }
 
-/* Call-to-action band */
-.cta-band {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  justify-content: space-between;
-  gap: var(--space-4);
-  padding: var(--space-6);
-  border: 1px solid var(--color-accent-tint-strong);
-  border-radius: var(--radius-xl);
-  background: var(--gradient-tint);
-}
-
-.cta-band h2 {
-  font-size: var(--text-2xl);
-}
-
-.cta-band p {
-  max-width: 560px;
-  margin: 0;
-  color: var(--color-text-muted);
-}
-
-.cta-band .button-row {
-  margin-top: 0;
-}
-
-@media (max-width: 639px) {
-  .cta-band {
-    padding: var(--space-4) var(--space-3);
-  }
-}
-
 /* Services page: five columns in one bordered grid. From 1366x768 up the whole section
    fits on one screen below the navbar. */
 .services-section {
@@ -1839,7 +1806,7 @@ address {
 }
 
 .contact-section {
-  padding-top: var(--space-4);
+  padding-top: var(--space-3);
 }
 
 .contact-main,
@@ -2582,6 +2549,10 @@ address {
 }
 
 /* 404 */
+.section.not-found {
+  padding-top: var(--space-4);
+}
+
 .not-found__inner {
   max-width: 640px;
   text-align: center;

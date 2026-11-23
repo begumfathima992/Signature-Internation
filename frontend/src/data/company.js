@@ -11,8 +11,7 @@ export const company = {
     'Signature International Services Limited provides management consultancy, web development, digital marketing, business advertisement and general business services.',
 
   email: 'hello@signatureinternational.example', // PLACEHOLDER
-  phone: '+44 (0)20 7946 0123', // PLACEHOLDER (Ofcom drama number)
-  phoneHref: '+442079460123', // PLACEHOLDER
+  phone: '+44 7741919923', // shown as "+44 - 7741919923"
   whatsapp: '442079460123', // PLACEHOLDER: international format, digits only
   address,
   hours: [

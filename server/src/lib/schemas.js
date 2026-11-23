@@ -28,6 +28,8 @@ export const categoryInput = z.object({
 export const itemInput = z.object({
   title,
   slug,
+  // Optional so a request without it (such as Hide/Show) leaves the saved description alone.
+  description: z.string().trim().max(300).optional(),
   isVisible: z.boolean().default(true),
 });
 
@@ -57,7 +59,7 @@ export const contactInput = z.object({
   phone: z
     .string()
     .trim()
-    .regex(/^\+?[\d\s()-]{6,30}$/, 'Use digits, spaces, brackets and an optional + only, e.g. +44 (0)20 7946 0123.'),
+    .regex(/^\+?[\d\s()-]{6,30}$/, 'Use digits, spaces, brackets and an optional + only, e.g. +44 7741919923.'),
   // Stored as digits only, the form wa.me links need: spaces, + and brackets are removed.
   whatsapp: z
     .string()

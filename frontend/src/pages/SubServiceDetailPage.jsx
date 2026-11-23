@@ -1,5 +1,4 @@
 import { Link, useParams } from 'react-router-dom';
-import CtaBand from '../components/CtaBand.jsx';
 import Faq from '../components/Faq.jsx';
 import Icon, { IconBox } from '../components/Icon.jsx';
 import PageHeader from '../components/PageHeader.jsx';
@@ -34,7 +33,7 @@ export default function SubServiceDetailPage() {
         ]}
         label={service.title}
         title={sub.title}
-        intro={`Part of our ${service.title}.`}
+        intro={sub.shortDescription || `Part of our ${service.title}.`}
         contactLink={`/contact?service=${service.slug}&topic=${sub.slug}`}
         back={{ to: serviceUrl, label: `Back to ${service.title}` }}
       />
@@ -164,13 +163,6 @@ function SubServiceDetail({ service, sub }) {
           </ul>
         </div>
       </section>
-
-      <CtaBand
-        title={`Talk to us about ${sub.title}`}
-        text="Send us a few details and we will come back to you within one working day."
-        to={contactLink}
-        label="Contact us"
-      />
     </>
   );
 }

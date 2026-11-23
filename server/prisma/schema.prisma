@@ -18,7 +18,7 @@ model Admin {
   createdAt    DateTime  @default(now())
   updatedAt    DateTime  @updatedAt
 
-  auditLogs AuditLog[]
+  auditLogs      AuditLog[]
   invitesCreated AdminInvite[] @relation("InviteCreatedBy")
   resetLinks     AdminInvite[] @relation("ResetForAdmin")
 }
@@ -79,15 +79,17 @@ model ServiceCategory {
 }
 
 model ServiceItem {
-  id         String    @id @default(uuid())
-  categoryId String
-  slug       String
-  title      String
-  sortOrder  Int
-  isVisible  Boolean   @default(true)
-  deletedAt  DateTime?
-  createdAt  DateTime  @default(now())
-  updatedAt  DateTime  @updatedAt
+  id          String    @id @default(uuid())
+  categoryId  String
+  slug        String
+  title       String
+  // Shown under the title on the sub-service's page and card; empty shows "Part of our <category>."
+  description String    @default("")
+  sortOrder   Int
+  isVisible   Boolean   @default(true)
+  deletedAt   DateTime?
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
 
   category ServiceCategory @relation(fields: [categoryId], references: [id], onDelete: Restrict)
 

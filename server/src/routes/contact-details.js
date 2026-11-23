@@ -15,11 +15,12 @@ async function readDetails(tx) {
   return row ? snapshot(row) : { ...DEFAULTS };
 }
 
-// Public: the details shown on the website. Browsers and proxies may cache them for 60 seconds.
+// Public: the details shown on the website.
 export function publicContactRouter() {
   const router = Router();
   router.get('/', async (req, res) => {
-    res.set('Cache-Control', 'public, max-age=60');
+    // no-cache: browsers check for new details on every page load, so admin changes show at once.
+    res.set('Cache-Control', 'no-cache');
     res.json({ contact: await readDetails(prisma) });
   });
   return router;

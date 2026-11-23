@@ -198,4 +198,31 @@ describe('public services API', () => {
     );
     assert.equal(hidden.isVisible, false);
   });
+
+  test('an item’s description is saved, logged, shown on the website and kept when the item is hidden', async () => {
+    const parent = await createCategory();
+    const item = await createItem(parent.id, { title: 'Payroll', slug: 'payroll' });
+    assert.equal(item.description, '', 'empty until an admin writes one');
+
+    const base = `/api/admin/categories/${parent.id}/items/${item.id}`;
+    const saved = await agent
+      .put(base)
+      .send({ title: 'Payroll', slug: 'payroll', description: '  Monthly payroll.  ' });
+    assert.equal(saved.body.item.description, 'Monthly payroll.');
+    const log = (await changeLogs()).at(-1);
+    assert.equal(log.action, 'UPDATE');
+    assert.equal(log.before.description, '');
+    assert.equal(log.after.description, 'Monthly payroll.');
+
+    // Hide and Show send no description; the saved one stays.
+    await agent.put(base).send({ title: 'Payroll', slug: 'payroll', isVisible: false });
+    await agent.put(base).send({ title: 'Payroll', slug: 'payroll', isVisible: true });
+    const res = await request(makeApp()).get('/api/services');
+    assert.deepEqual(res.body.categories[0].items, [
+      { slug: 'payroll', title: 'Payroll', description: 'Monthly payroll.' },
+    ]);
+
+    const tooLong = await agent.put(base).send({ title: 'Payroll', slug: 'payroll', description: 'x'.repeat(301) });
+    assert.equal(tooLong.status, 400);
+  });
 });

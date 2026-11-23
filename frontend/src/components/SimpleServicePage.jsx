@@ -1,5 +1,4 @@
 import { Link } from 'react-router-dom';
-import CtaBand from './CtaBand.jsx';
 import Icon from './Icon.jsx';
 import PageHeader from './PageHeader.jsx';
 import PageMeta from './PageMeta.jsx';
@@ -47,13 +46,6 @@ export default function SimpleServicePage({ breadcrumb, label, title, intro, ite
           </div>
         </section>
       )}
-
-      <CtaBand
-        title={`Talk to us about ${title}`}
-        text="Send us a few details and we will come back to you within one working day."
-        to={contactLink}
-        label="Contact us"
-      />
     </>
   );
 }

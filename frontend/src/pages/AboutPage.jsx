@@ -1,5 +1,3 @@
-import { Link } from 'react-router-dom';
-import CtaBand from '../components/CtaBand.jsx';
 import Icon, { IconBox } from '../components/Icon.jsx';
 import PageHeader from '../components/PageHeader.jsx';
 import Photo from '../components/Photo.jsx';
@@ -20,11 +18,6 @@ export default function AboutPage() {
         label="About us"
         title="Business support built on clarity and trust"
         intro="We help organisations plan, grow and present themselves well, with practical advice and dependable delivery."
-        actions={
-          <Link to="/contact" className="button button--primary">
-            Talk to us
-          </Link>
-        }
         aside={
           <div className="photo-frame photo-frame--decorated">
             <Photo image={images.office} sizes="(min-width: 1024px) 520px, 100vw" priority />
@@ -109,8 +102,6 @@ export default function AboutPage() {
           </ul>
         </div>
       </section>
-
-      <CtaBand title="Let’s work together" />
     </>
   );
 }

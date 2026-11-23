@@ -5,7 +5,7 @@ import { ICON_CHOICES } from './iconChoices.js';
 import { slugify } from './slugify.js';
 
 const emptyCategory = { title: '', slug: '', description: '', icon: 'briefcase', isVisible: true };
-const emptyItem = { title: '', slug: '', isVisible: true };
+const emptyItem = { title: '', slug: '', description: '', isVisible: true };
 
 // Add or edit a category (kind="category") or an item (kind="item"). onSave resolves when saved and
 // rejects with the API error, whose field errors are shown next to the fields.
@@ -111,6 +111,22 @@ export default function ServiceFormModal({ kind, initial, categoryTitle, onSave,
           <p className="admin-form__warning" role="note">
             Changing the slug changes this page’s web address, so existing links to it will stop working.
           </p>
+        )}
+
+        {!isCategory && (
+          <Field
+            id="item-description"
+            label="Description"
+            hint={`One or two short sentences, shown under the title on this item’s page. Leave empty to show “Part of our ${categoryTitle}.”`}
+            error={errors.description}
+          >
+            <textarea
+              rows="3"
+              maxLength={300}
+              value={values.description}
+              onChange={(event) => update('description', event.target.value)}
+            />
+          </Field>
         )}
 
         {isCategory && (

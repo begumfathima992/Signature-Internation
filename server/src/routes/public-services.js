@@ -15,7 +15,11 @@ export function publicServicesRouter() {
         title: true,
         description: true,
         icon: true,
-        items: { where: visible, orderBy: { sortOrder: 'asc' }, select: { slug: true, title: true } },
+        items: {
+          where: visible,
+          orderBy: { sortOrder: 'asc' },
+          select: { slug: true, title: true, description: true },
+        },
       },
     });
     res.set('Cache-Control', 'public, max-age=60');

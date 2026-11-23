@@ -17,7 +17,7 @@ export function writeAudit(tx, req, { admin, adminEmail, action, entityType, ent
 }
 
 const CATEGORY_FIELDS = ['slug', 'title', 'description', 'icon', 'sortOrder', 'isVisible', 'deletedAt'];
-const ITEM_FIELDS = ['categoryId', 'slug', 'title', 'sortOrder', 'isVisible', 'deletedAt'];
+const ITEM_FIELDS = ['categoryId', 'slug', 'title', 'description', 'sortOrder', 'isVisible', 'deletedAt'];
 
 function pick(record, fields) {
   return Object.fromEntries(fields.map((field) => [field, record[field]]));

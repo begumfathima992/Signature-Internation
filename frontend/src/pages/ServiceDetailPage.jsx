@@ -1,5 +1,4 @@
 import { Link, useParams } from 'react-router-dom';
-import CtaBand from '../components/CtaBand.jsx';
 import Faq from '../components/Faq.jsx';
 import { IconBox } from '../components/Icon.jsx';
 import PageHeader from '../components/PageHeader.jsx';
@@ -160,13 +159,6 @@ function ServiceDetail({ service, getService }) {
           </div>
         </div>
       </section>
-
-      <CtaBand
-        title="Interested in this service?"
-        text="Send us a few details and we will come back to you within one working day."
-        to={contactLink}
-        label="Contact us"
-      />
     </>
   );
 }

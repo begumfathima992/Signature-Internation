@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useState } from 'react';
 import Icon from '../components/Icon.jsx';
+import { formatPhone } from '../context/contact.js';
 import PageMeta from '../components/PageMeta.jsx';
 import { useToast } from './toast.js';
 import { useAdminRequest } from './useAdminRequest.js';
@@ -67,7 +68,7 @@ export default function ContactDetailsPage() {
       setSaved(toForm(contact));
       setValues(toForm(contact));
       setErrors({});
-      toast.success('Contact details saved. The website shows them within a minute.');
+      toast.success('Contact details saved. The website shows them straight away.');
     } catch (error) {
       setErrors(Object.fromEntries((error.errors ?? []).map((item) => [item.field, item.message])));
       setFormError(error.message);
@@ -100,7 +101,7 @@ export default function ContactDetailsPage() {
       <div className="admin-page-header">
         <div>
           <h1>Contact details</h1>
-          <p>Shown on the Contact page, in the footer and in the mobile menu. Changes appear within a minute.</p>
+          <p>Shown on the Contact page, in the footer and in the mobile menu. Changes appear straight away.</p>
         </div>
       </div>
 
@@ -140,7 +141,7 @@ export default function ContactDetailsPage() {
             </div>
             <div className="field">
               <label htmlFor="contact-phone">Phone</label>
-              {hint('phone', 'As it should appear, e.g. +44 (0)20 7946 0123')}
+              {hint('phone', `Shown on the website as ${formatPhone(values.phone) || '+44 - 7741919923'}`)}
               <input
                 type="tel"
                 maxLength={30}

@@ -33,6 +33,8 @@ export function mergeServices(categories) {
           ...knownItem,
           slug: item.slug,
           title: item.title,
+          // The admin's description, if set, replaces the built-in short description.
+          shortDescription: item.description || knownItem?.shortDescription || '',
           icon: knownItem?.icon ?? 'check',
           hasDetails: Boolean(knownItem),
         };

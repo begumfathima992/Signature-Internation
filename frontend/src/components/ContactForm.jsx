@@ -72,7 +72,7 @@ export default function ContactForm({ initialService = '', topic }) {
     email: '',
     country: DEFAULT_COUNTRY,
     phone: '',
-    service: initialService || OTHER_SERVICE, // a link from a service page preselects that service
+    service: initialService, // empty shows "Choose a service…"; a link from a service page preselects that service
     message: '',
     consent: false,
     website: '', // honeypot: hidden from real visitors
